@@ -57,6 +57,18 @@ def ChkFile(URL):
             fw.write(f'{time}\n{clean}\n')
         fw.close()
 
+def MakeTXTFile(URL):
+    SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'
+    f = open(SubtitleFile, 'r')
+    lines = f.readlines()
+    entire_text=''
+    for line in lines[5::3]:
+        entire_text += line
+    f.close()
+    fw = open('%s.txt'%(SubtitleFile[:-4]), 'w')
+    fw.write(entire_text)
+    fw.close()
+
 def ChkID(URL):
     id = URL.rsplit('/',1)[-1]
     return id
@@ -77,10 +89,14 @@ def Ctrl_F(keyword,URL):
     #print(TimeStamp) #확인용
     return TimeStamp  
 
-def OnlyNoun(URL):
-    with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt','r', encoding='utf-8') as f:
+def ChkTxtFile(URL):
+    if not os.path.exists(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'):
+        MakeTXTFile(URL)
+
+def Noun(URL):
+    ChkTxtFile(URL)
+    with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt','r', encoding='utf-8') as f:
         script = f.read()
-    tagger = Mecab()
-    ex1 = tagger.nouns(script)
-    ex1
-    
+    mecab = Mecab()
+    ounResult = mecab.nouns(script)
+    return NounResult
