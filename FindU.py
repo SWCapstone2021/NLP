@@ -1,7 +1,7 @@
 from basefunction.FindUMethod import Ctrl_F, MakeVttFile
 
 if __name__=="__main__":
-    i=input("기능번호:")
+    i=input("기능번호: 1(extract subtitle) or 2(ctrl+F)")
     
     if i=='1':
         URL=input("URL:")
