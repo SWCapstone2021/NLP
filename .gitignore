@@ -3,6 +3,7 @@ STT/ClovaCall/.idea/
 STT/ClovaCall/data/*
 STT/ClovaCall/models/*
 STT/ClovaCall/log/*
+script/*
 
 !STT/ClovaCall/data/*.py
 */*/nohup.out
