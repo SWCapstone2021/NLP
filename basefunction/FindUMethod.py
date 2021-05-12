@@ -4,7 +4,7 @@ import os
 import glob
 from os.path import basename
 
-YOUTUBE_REPO_PATH = '/home/heesu/mount'
+YOUTUBE_REPO_PATH = '/home/heesu/mount/NLP/script'
 
 def MakeVttFile(URL):
   downOption = {
@@ -14,7 +14,7 @@ def MakeVttFile(URL):
     'subtitleslangs':['ko'],
     'subtitlesformat': 'vtt',
     'nooverwrites':True,
-    'outtmpl' : '%(id)s'
+    'outtmpl' : 'script/%(id)s'
   }
   with youtube_dl.YoutubeDL(downOption) as ydl:
       ydl.download([URL])
@@ -38,6 +38,7 @@ def SelectFile(URL):
 
 def Ctrl_F(keyword,URL):
     SubtitleFile1 = SelectFile(URL)
+    TimeStamp=[]
     with open(SubtitleFile1) as f:
         lines = f.readlines()
         StartPoint = 0
@@ -45,4 +46,7 @@ def Ctrl_F(keyword,URL):
             StartPoint += 1
             if keyword in line:
                 PlaySection = lines[StartPoint-2]
-                print(line + PlaySection)  
+                #print(line + PlaySection) 확인용
+                TimeStamp.append(PlaySection.split(' ')[0])
+    return TimeStamp 
+                

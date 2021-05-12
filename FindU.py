@@ -9,4 +9,4 @@ if __name__=="__main__":
     if i=='2':
         SearchingValue = input("키워드입력:")
         URL=input("URL:")
-        Ctrl_F(SearchingValue,'URL')
+        Ctrl_F(SearchingValue,URL)
