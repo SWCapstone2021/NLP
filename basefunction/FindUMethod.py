@@ -4,6 +4,7 @@ import os
 import glob
 from os.path import basename
 from konlpy.tag import Mecab
+from math import log
 
 YOUTUBE_REPO_PATH = '/home/heesu/mount/NLP/script'
 
@@ -57,6 +58,18 @@ def ChkFile(URL):
             fw.write(f'{time}\n{clean}\n')
         fw.close()
 
+def MakeTXTFile(URL):
+    SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'
+    f = open(SubtitleFile, 'r')
+    lines = f.readlines()
+    entire_text=''
+    for line in lines[5::3]:
+        entire_text += line
+    f.close()
+    fw = open('%s.txt'%(SubtitleFile[:-4]), 'w')
+    fw.write(entire_text)
+    fw.close()
+
 def ChkID(URL):
     id = URL.rsplit('/',1)[-1]
     return id
@@ -77,10 +90,31 @@ def Ctrl_F(keyword,URL):
     #print(TimeStamp) #확인용
     return TimeStamp  
 
-def OnlyNoun(URL):
-    with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt','r', encoding='utf-8') as f:
+def ChkTxtFile(URL):
+    if not os.path.exists(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'):
+        MakeTXTFile(URL)
+
+def Noun(URL):
+    ChkTxtFile(URL)
+    with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt','r', encoding='utf-8') as f:
         script = f.read()
-    tagger = Mecab()
-    ex1 = tagger.nouns(script)
-    ex1
-    
+    mecab = Mecab()
+    NounResult = mecab.nouns(script)
+    return NounResult
+
+def Frequency(keyword,URL):
+    OnlyNoun=Noun(URL)
+    TF=0
+    for word in OnlyNoun:
+        if keyword in word:
+            TF+=1
+    with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt','r', encoding='utf-8') as f:
+        script = f.readlines()
+    ILF = 0
+    for line in script:
+        if keyword in line:
+            ILF += 1
+    TF_IDF = TF * log(len(script) / ILF)
+    return print(TF_IDF)
+    #TF-IDF = TF * (log(N/df)) TF:단어 빈도수, N: 문장개수, IDF: 단어가 포함된 문장개수
+
