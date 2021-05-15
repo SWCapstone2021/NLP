@@ -37,8 +37,9 @@ def load_audio(audio_path: str, del_silence: bool = False, extension: str = 'pcm
             return signal / 32767  # normalize audio
 
         elif extension == 'wav' or extension == 'flac':
-            signal, _ = librosa.load(audio_path, sr=16000)
-            return signal
+            signal, sr = librosa.load(audio_path, sr=16000)
+            signals, time_stamps = __split(signal, sr)
+            return signals, time_stamps
 
     except ValueError:
         logger.debug('ValueError in {0}'.format(audio_path))
@@ -49,6 +50,33 @@ def load_audio(audio_path: str, del_silence: bool = False, extension: str = 'pcm
     except IOError:
         logger.debug('IOError in {0}'.format(audio_path))
         return None
+
+
+def __split(y, sr):
+    intervals = librosa.effects.split(y, 25)
+    len_interval = len(intervals)
+    signals = list()
+    time_stamps = list()
+
+    i = 0
+    while i < len_interval - 1:
+        next_i = i
+        while intervals[next_i][1] - intervals[next_i][0] < sr * 3 and intervals[next_i][0] - intervals[i][
+            0] < sr * 5:
+            if next_i == len_interval - 1:
+                break
+            next_i += 2
+
+        if i == next_i:
+            next_i += 1
+
+        wav = y[intervals[i][0]:intervals[next_i][0]]
+        signals.append(wav)
+        time_stamps.append(intervals[i][0] / sr)
+
+        i = next_i
+
+    return signals, time_stamps
 
 
 def __power_to_db(S, ref=1.0, amin=1e-10, top_db=80.0):
@@ -93,6 +121,7 @@ def __to_mono(y):
     use this code fragments instead of importing librosa package,
     because of our server has a problem with importing librosa.
     """
+
     def valid_audio(y, mono=True):
         if not isinstance(y, np.ndarray):
             raise ParameterError('Audio data must be of type numpy.ndarray')
