@@ -4,6 +4,7 @@ import os
 import glob
 from os.path import basename
 from konlpy.tag import Mecab
+from math import log
 
 YOUTUBE_REPO_PATH = '/home/heesu/mount/NLP/script'
 
@@ -98,5 +99,22 @@ def Noun(URL):
     with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt','r', encoding='utf-8') as f:
         script = f.read()
     mecab = Mecab()
-    ounResult = mecab.nouns(script)
+    NounResult = mecab.nouns(script)
     return NounResult
+
+def Frequency(keyword,URL):
+    OnlyNoun=Noun(URL)
+    TF=0
+    for word in OnlyNoun:
+        if keyword in word:
+            TF+=1
+    with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt','r', encoding='utf-8') as f:
+        script = f.readlines()
+    ILF = 0
+    for line in script:
+        if keyword in line:
+            ILF += 1
+    TF_IDF = TF * log(len(script) / ILF)
+    return print(TF_IDF)
+    #TF-IDF = TF * (log(N/df)) TF:단어 빈도수, N: 문장개수, IDF: 단어가 포함된 문장개수
+
