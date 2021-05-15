@@ -1,4 +1,4 @@
-#custom
+#STT
 STT/ClovaCall/.idea/
 STT/ClovaCall/data/*
 STT/ClovaCall/models/*
@@ -6,6 +6,9 @@ STT/ClovaCall/log/*
 script/*
 !STT/ClovaCall/data/*.py
 */*/nohup.out
+STT/audio
+STT/models
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
