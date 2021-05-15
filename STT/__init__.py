@@ -20,17 +20,19 @@ import numpy as np
 import torchaudio
 from torch import Tensor
 
+import sys
+
+sys.path.append((os.path.dirname(__file__)))
+
 from kospeech.vocabs.ksponspeech import KsponSpeechVocabulary
 from kospeech.audio.core import load_audio
 from kospeech.models import (
-    DeepSpeech2,
     ListenAttendSpell,
 )
 
 
-def parse_audio(audio_path: str, del_silence: bool = False, audio_extension: str = 'pcm') -> Tensor:
-
-    paths = sorted(glob(os.path.join(audio_path,'*.wav')), key=lambda i: int(os.path.basename(i)[:-4]))
+def parse_audio_separate(audio_path: str, del_silence: bool = False, audio_extension: str = 'pcm') -> Tensor:
+    paths = sorted(glob(os.path.join(audio_path, '*.wav')), key=lambda i: int(os.path.basename(i)[:-4]))
     features = list()
     input_lengths = list()
 
@@ -53,20 +55,45 @@ def parse_audio(audio_path: str, del_silence: bool = False, audio_extension: str
 
     return features, input_lengths
 
+
+def parse_audio(audio_path: str, del_silence: bool = False, audio_extension: str = 'pcm') -> Tensor:
+    signals, time_stamps = load_audio(audio_path, del_silence, extension=audio_extension)
+    features = list()
+    input_lengths = list()
+
+    for signal in signals:
+        feature = torchaudio.compliance.kaldi.fbank(
+            waveform=Tensor(signal).unsqueeze(0),
+            num_mel_bins=80,
+            frame_length=20,
+            frame_shift=10,
+            window_type='hamming'
+        ).transpose(0, 1).numpy()
+
+        feature -= feature.mean()
+        feature /= np.std(feature)
+
+        feature = torch.FloatTensor(feature).transpose(0, 1)
+
+        features.append(feature)
+        input_lengths.append(torch.LongTensor([len(feature)]))
+
+    return features, input_lengths, time_stamps
+
+
 def stt(model, vocab, audio_path):
-    
-    features, input_lengths = parse_audio(audio_path, del_silence=True)
+    features, input_lengths, time_stamps = parse_audio(audio_path, del_silence=True, audio_extension='wav')
     sentences = list()
 
-    for feature, input_length in zip(features, input_lengths):
+    for feature, input_length, time_stamp in zip(features, input_lengths, time_stamps):
         y_hats = model.recognize(feature.unsqueeze(0).to('cuda'), input_length)
         sentence = vocab.label_to_string(y_hats.cpu().detach().numpy())
-        
-        sentences.append(sentence)
-    
+        sentences.append((time_stamp, sentence[0]))
+
     return sentences
 
-def load_model(model_path='models/ds2.pth'):
+
+def load_model(model_path='STT/models/ds2.pt'):
     device = 'cuda'
 
     model = torch.load(model_path, map_location=lambda storage, loc: storage).to(device)
@@ -77,11 +104,7 @@ def load_model(model_path='models/ds2.pth'):
     if isinstance(model, ListenAttendSpell):
         model.encoder.device = device
         model.decoder.device = device
-    
-    vocab = KsponSpeechVocabulary('kospeech/aihub_character_vocabs.csv')
+
+    vocab = KsponSpeechVocabulary('STT/kospeech/aihub_character_vocabs.csv')
 
     return model, vocab
-
-
-
-
