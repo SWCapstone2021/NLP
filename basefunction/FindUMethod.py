@@ -18,11 +18,12 @@ VttOption = {
 }
 
 WavOption ={
-    'format' : 'bestaudio',
-    'postprocessors': [{
+    'format' : 'bestaudio/best',
+    'postprocessors' : [{
         'key': 'FFmpegExtractAudio',
         'preferredcodec': 'wav',
     }],
+    'nooverwrites':True,
     'outtmpl' : 'script/%(id)s.wav'
 }
 
@@ -34,9 +35,8 @@ def MakeFile(URL, option = VttOption):
 
 def ChkFile(URL):
     if not os.path.exists(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'):
-        VttOption['writeautomaticsub']=True
+        VttOption['writeautomaticsub'] = True
         MakeFile(URL, option = VttOption)
-        MakeFile(URL,WavOption)
         SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'
         f = open(SubtitleFile, 'r')
         lines = f.readlines()
@@ -69,6 +69,7 @@ def ChkFile(URL):
                     pass
             fw.write(f'{time}\n{clean}\n')
         fw.close()
+        MakeFile(URL, option = WavOption)
 
 def MakeTXTFile(URL):
     SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'
@@ -83,7 +84,7 @@ def MakeTXTFile(URL):
     fw.close()
 
 def ChkID(URL):
-    id = URL.rsplit('/',1)[-1]
+    id = URL.rsplit('=',1)[-1]
     return id
 
 def Ctrl_F(keyword,URL):
