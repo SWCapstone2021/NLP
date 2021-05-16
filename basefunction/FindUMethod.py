@@ -6,25 +6,37 @@ from os.path import basename
 from konlpy.tag import Mecab
 from math import log
 
-YOUTUBE_REPO_PATH = '/home/heesu/mount/NLP/script'
+YOUTUBE_REPO_PATH = '/home/seungmin/dmount/NLP/script'#mount/NLP/script'
 
-def MakeVttFile(URL,auto_sub=False):
-  DownOption = {
+VttOption = {
     'skip_download': True,
     'writesubtitles' : True,
-    'writeautomaticsub' : auto_sub,
     'subtitleslangs':['ko'],
     'subtitlesformat': 'vtt',
     'nooverwrites':True,
     'outtmpl' : 'script/%(id)s'
-  }
+}
+
+WavOption ={
+    'format' : 'bestaudio',
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'wav',
+    }],
+    'outtmpl' : 'script/%(id)s.wav'
+}
+
+def MakeFile(URL, option = VttOption):
+  DownOption = option
   with youtube_dl.YoutubeDL(DownOption) as ydl:
     ydl.download([URL])
     ChkFile(URL)
 
 def ChkFile(URL):
     if not os.path.exists(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'):
-        MakeVttFile(URL, auto_sub=True)
+        VttOption['writeautomaticsub']=True
+        MakeFile(URL, option = VttOption)
+        MakeFile(URL,WavOption)
         SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'
         f = open(SubtitleFile, 'r')
         lines = f.readlines()
