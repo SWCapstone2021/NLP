@@ -1,42 +1,43 @@
 from pytube import YouTube
 import youtube_dl
 import os
-import glob
 from os.path import basename
 from konlpy.tag import Mecab
 from math import log
 
-YOUTUBE_REPO_PATH = '/home/seungmin/dmount/NLP/script'#mount/NLP/script'
+YOUTUBE_REPO_PATH = '/home/seungmin/dmount/NLP/script'  # mount/NLP/script'
 
 VttOption = {
     'skip_download': True,
-    'writesubtitles' : True,
-    'subtitleslangs':['ko'],
+    'writesubtitles': True,
+    'subtitleslangs': ['ko'],
     'subtitlesformat': 'vtt',
-    'nooverwrites':True,
-    'outtmpl' : 'script/%(id)s'
+    'nooverwrites': True,
+    'outtmpl': 'script/%(id)s'
 }
 
-WavOption ={
-    'format' : 'bestaudio/best',
-    'postprocessors' : [{
+WavOption = {
+    'format': 'bestaudio/best',
+    'postprocessors': [{
         'key': 'FFmpegExtractAudio',
         'preferredcodec': 'wav',
     }],
-    'nooverwrites':True,
-    'outtmpl' : 'script/%(id)s.wav'
+    'nooverwrites': True,
+    'outtmpl': 'script/%(id)s.wav'
 }
 
-def MakeFile(URL, option = VttOption):
-  DownOption = option
-  with youtube_dl.YoutubeDL(DownOption) as ydl:
-    ydl.download([URL])
-    ChkFile(URL)
+
+def MakeFile(URL, option=VttOption):
+    DownOption = option
+    with youtube_dl.YoutubeDL(DownOption) as ydl:
+        ydl.download([URL])
+        ChkFile(URL)
+
 
 def ChkFile(URL):
     if not os.path.exists(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'):
         VttOption['writeautomaticsub'] = True
-        MakeFile(URL, option = VttOption)
+        MakeFile(URL, option=VttOption)
         SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'
         f = open(SubtitleFile, 'r')
         lines = f.readlines()
@@ -64,64 +65,70 @@ def ChkFile(URL):
                 clean += c
             if time_stamp:
                 try:
-                    time=lines[(idx+1)*8].split(' ')[0]
+                    time = lines[(idx + 1) * 8].split(' ')[0]
                 except:
                     pass
             fw.write(f'{time}\n{clean}\n')
         fw.close()
-        MakeFile(URL, option = WavOption)
+        MakeFile(URL, option=WavOption)
+
 
 def MakeTXTFile(URL):
     SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'
     f = open(SubtitleFile, 'r')
     lines = f.readlines()
-    entire_text=''
+    entire_text = ''
     for line in lines[5::3]:
         entire_text += line
     f.close()
-    fw = open('%s.txt'%(SubtitleFile[:-4]), 'w')
+    fw = open('%s.txt' % (SubtitleFile[:-4]), 'w')
     fw.write(entire_text)
     fw.close()
 
+
 def ChkID(URL):
-    id = URL.rsplit('=',1)[-1]
+    id = URL.rsplit('=', 1)[-1]
     return id
 
-def Ctrl_F(keyword,URL):
+
+def Ctrl_F(keyword, URL):
     SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'
-    TimeStamp=[]
+    TimeStamp = []
     with open(SubtitleFile) as f:
         lines = f.readlines()
         StartPoint = 3
         for line in lines[4:]:
             StartPoint += 1
             if keyword in line:
-                PlaySection = lines[StartPoint-1]
-                #print(line + PlaySection) #확인용
+                PlaySection = lines[StartPoint - 1]
+                # print(line + PlaySection) #확인용
                 PlaySection = PlaySection.split(' ')[0]
                 TimeStamp.append(PlaySection.split('\n')[0])
-    #print(TimeStamp) #확인용
-    return TimeStamp  
+    # print(TimeStamp) #확인용
+    return TimeStamp
+
 
 def ChkTxtFile(URL):
     if not os.path.exists(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'):
         MakeTXTFile(URL)
 
+
 def Noun(URL):
     ChkTxtFile(URL)
-    with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt','r', encoding='utf-8') as f:
+    with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt', 'r', encoding='utf-8') as f:
         script = f.read()
     mecab = Mecab()
     NounResult = mecab.nouns(script)
     return NounResult
 
-def Frequency(keyword,URL):
-    OnlyNoun=Noun(URL)
-    TF=0
+
+def Frequency(keyword, URL):
+    OnlyNoun = Noun(URL)
+    TF = 0
     for word in OnlyNoun:
         if keyword in word:
-            TF+=1
-    with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt','r', encoding='utf-8') as f:
+            TF += 1
+    with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt', 'r', encoding='utf-8') as f:
         script = f.readlines()
     ILF = 0
     for line in script:
@@ -129,5 +136,4 @@ def Frequency(keyword,URL):
             ILF += 1
     TF_IDF = TF * log(len(script) / ILF)
     return print(TF_IDF)
-    #TF-IDF = TF * (log(N/df)) TF:단어 빈도수, N: 문장개수, IDF: 단어가 포함된 문장개수
-
+    # TF-IDF = TF * (log(N/df)) TF:단어 빈도수, N: 문장개수, IDF: 단어가 포함된 문장개수
