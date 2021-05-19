@@ -1,32 +1,26 @@
+import os
+from glob import glob
+
 from STT import load_model, stt
 from pprint import pprint as pp
-# from basefunction.FindUMethod import *
-
-import os
+from basefunction.FindUMethod import MakeTXTFile
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 if __name__ == "__main__":
-    # i = input("fucntion num: 1(extract subtitle), 2(ctrl+F), 3(Frequency), 4(Check stt performance)")
+    ids = [os.path.basename(x)[:-4] for x in glob('data/true/*')]
 
-    if i == '1':
-        URL = input("URL:")
-        MakeFile(URL)
-    if i == '2':
-        SearchingValue = input("keyword:")
-        URL = input("URL:")
-        Ctrl_F(SearchingValue, URL)
-    if i == '3':
-        SearchingValue = input("keyword:")
-        URL = input("URL:")
-        Frequency(SearchingValue, URL)
-    if i == '4':
-        # no db ins
-        print("Model loading... ")
-        model, vocab = load_model()
-        print("Done")
+    for id in ids:
+        if not os.path.exists(f'data/audio/{id}.wav') or not os.path.exists(f'data/scripts/{id}.ko.vtt'):
+            print(f"Make scripts about {id}")
+            MakeTXTFile(f'https://www.youtube.com/watch?v={id}')
 
-        audio_path = 'STT/data/audio/full.wav'
+    print("Model loading... ")
+    model, vocab = load_model()
+    print("Done")
 
-        sentences = stt(model, vocab, audio_path)
-        pp(sentences)
+    for id in ids:
+        audio_path = f'data/audio/{id}'
+
+    sentences = stt(model, vocab, audio_path)
+    pp(sentences)
