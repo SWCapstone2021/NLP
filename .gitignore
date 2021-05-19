@@ -6,7 +6,7 @@ STT/ClovaCall/log/*
 script/*
 !STT/ClovaCall/data/*.py
 */*/nohup.out
-STT/audio
+STT/data/audio
 STT/models
 .idea/
 
