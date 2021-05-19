@@ -70,6 +70,7 @@ def ChkFile(URL):
                     pass
             fw.write(f'{time}\n{clean}\n')
         fw.close()
+        VttOption['writeautomaticsub'] = False
         MakeFile(URL, option=WavOption)
 
 
