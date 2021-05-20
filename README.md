@@ -23,7 +23,7 @@ Period : Iteration 1~3
 from STT import load_model, stt
 
 model, vocab = load_model() # model과 vocab은 처음 로드해놓고 계속 사용하기
-audio_path = 'your/audio_path/audio.wav'
+audio_path = 'your/audio_path/origin_audio.wav'
 
 sentences = stt(model,vocab,audio_path)
 
