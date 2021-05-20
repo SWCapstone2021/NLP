@@ -9,7 +9,7 @@ script/*
 STT/data/audio
 STT/models
 .idea/
-
+data/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
