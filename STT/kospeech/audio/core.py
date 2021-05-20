@@ -23,7 +23,7 @@ from kospeech.utils import logger
 
 def load_audio(audio_path: str, del_silence: bool = False, extension: str = 'pcm') -> np.ndarray:
     """
-    Load audio file (PCM) to sound. if del_silence is True, Eliminate all sounds below 30dB.
+    Load origin_audio file (PCM) to sound. if del_silence is True, Eliminate all sounds below 30dB.
     If exception occurs in numpy.memmap(), return None.
     """
     try:
@@ -34,7 +34,7 @@ def load_audio(audio_path: str, del_silence: bool = False, extension: str = 'pcm
                 non_silence_indices = split(signal, top_db=30)
                 signal = np.concatenate([signal[start:end] for start, end in non_silence_indices])
 
-            return signal / 32767  # normalize audio
+            return signal / 32767  # normalize origin_audio
 
         elif extension == 'wav' or extension == 'flac':
             signal, sr = librosa.load(audio_path, sr=16000)
@@ -130,7 +130,7 @@ def __to_mono(y):
             raise ParameterError('Audio data must be floating-point')
 
         elif mono and y.ndim != 1:
-            raise ParameterError('Invalid shape for monophonic audio: '
+            raise ParameterError('Invalid shape for monophonic origin_audio: '
                                  'ndim={:d}, shape={}'.format(y.ndim, y.shape))
 
         if y.ndim > 2 or y.ndim == 0:

@@ -28,7 +28,7 @@ from kospeech.data.audio.feature import (
 
 class AudioParser(object):
     """
-    Provides inteface of audio parser.
+    Provides inteface of origin_audio parser.
 
     Note:
         Do not use this class directly, use one of the sub classes.
@@ -49,11 +49,11 @@ class AudioParser(object):
 
 class SpectrogramParser(AudioParser):
     """
-    Parses audio file into (spectrogram / mel spectrogram / mfcc) with various options.
+    Parses origin_audio file into (spectrogram / mel spectrogram / mfcc) with various options.
 
     Args:
         transform_method (str): which feature to use (default: mel)
-        sample_rate (int): Sample rate of audio signal. (Default: 16000)
+        sample_rate (int): Sample rate of origin_audio signal. (Default: 16000)
         n_mels (int):  Number of mfc coefficients to retain. (Default: 40)
         frame_length (int): frame length for spectrogram (ms) (Default : 20)
         frame_shift (int): Length of hop between STFT windows. (ms) (Default: 10)
@@ -74,7 +74,7 @@ class SpectrogramParser(AudioParser):
     def __init__(
             self,
             feature_extract_by: str = 'librosa',      # which library to use for feature extraction
-            sample_rate: int = 16000,                 # sample rate of audio signal.
+            sample_rate: int = 16000,                 # sample rate of origin_audio signal.
             n_mels: int = 80,                         # Number of mfc coefficients to retain.
             frame_length: int = 20,                   # frame length for spectrogram
             frame_shift: int = 10,                    # Length of hop between STFT windows.
@@ -88,7 +88,7 @@ class SpectrogramParser(AudioParser):
             sos_id: int = 1,                          # start of sentence token`s identification
             eos_id: int = 2,                          # end of sentence token`s identification
             dataset_path: str = None,                 # noise dataset path
-            audio_extension: str = 'pcm',             # audio extension
+            audio_extension: str = 'pcm',             # origin_audio extension
     ) -> None:
         super(SpectrogramParser, self).__init__(dataset_path)
         self.del_silence = del_silence
@@ -112,14 +112,14 @@ class SpectrogramParser(AudioParser):
 
     def parse_audio(self, audio_path: str, augment_method: int) -> Tensor:
         """
-        Parses audio.
+        Parses origin_audio.
 
         Args:
-             audio_path (str): path of audio file
+             audio_path (str): path of origin_audio file
              augment_method (int): flag indication which augmentation method to use.
 
         Returns: feature_vector
-            - **feature_vector** (torch.FloatTensor): feature from audio file.
+            - **feature_vector** (torch.FloatTensor): feature from origin_audio file.
         """
         signal = load_audio(audio_path, self.del_silence, extension=self.audio_extension)
 

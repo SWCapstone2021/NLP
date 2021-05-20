@@ -20,10 +20,10 @@ from torch import Tensor, FloatTensor
 
 class Spectrogram(object):
     """
-    Create a spectrogram from a audio signal.
+    Create a spectrogram from a origin_audio signal.
 
     Args:
-        sample_rate (int): Sample rate of audio signal. (Default: 16000)
+        sample_rate (int): Sample rate of origin_audio signal. (Default: 16000)
         frame_length (int): frame length for spectrogram (ms) (Default : 20)
         frame_shift (int): Length of hop between STFT windows. (ms) (Default: 10)
         feature_extract_by (str): which library to use for feature extraction (default: torch)
@@ -77,10 +77,10 @@ class Spectrogram(object):
 
 class MelSpectrogram(object):
     """
-    Create MelSpectrogram for a raw audio signal. This is a composition of Spectrogram and MelScale.
+    Create MelSpectrogram for a raw origin_audio signal. This is a composition of Spectrogram and MelScale.
 
     Args:
-        sample_rate (int): Sample rate of audio signal. (Default: 16000)
+        sample_rate (int): Sample rate of origin_audio signal. (Default: 16000)
         n_mels (int):  Number of mfc coefficients to retain. (Default: 80)
         frame_length (int): frame length for spectrogram (ms) (Default : 20)
         frame_shift (int): Length of hop between STFT windows. (ms) (Default: 10)
@@ -140,10 +140,10 @@ class MelSpectrogram(object):
 
 class MFCC(object):
     """
-    Create the Mel-frequency cepstrum coefficients (MFCCs) from an audio signal.
+    Create the Mel-frequency cepstrum coefficients (MFCCs) from an origin_audio signal.
 
     Args:
-        sample_rate (int): Sample rate of audio signal. (Default: 16000)
+        sample_rate (int): Sample rate of origin_audio signal. (Default: 16000)
         n_mfcc (int):  Number of mfc coefficients to retain. (Default: 40)
         frame_length (int): frame length for spectrogram (ms) (Default : 20)
         frame_shift (int): Length of hop between STFT windows. (ms) (Default: 10)
@@ -202,10 +202,10 @@ class MFCC(object):
 
 class FilterBank(object):
     """
-    Create a fbank from a raw audio signal. This matches the input/output of Kaldi’s compute-fbank-feats
+    Create a fbank from a raw origin_audio signal. This matches the input/output of Kaldi’s compute-fbank-feats
 
     Args:
-        sample_rate (int): Sample rate of audio signal. (Default: 16000)
+        sample_rate (int): Sample rate of origin_audio signal. (Default: 16000)
         n_mels (int):  Number of mfc coefficients to retain. (Default: 80)
         frame_length (int): frame length for spectrogram (ms) (Default : 20)
         frame_shift (int): Length of hop between STFT windows. (ms) (Default: 10)

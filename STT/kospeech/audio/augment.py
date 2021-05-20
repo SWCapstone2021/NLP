@@ -31,7 +31,7 @@ class SpecAugment(object):
         freq_mask_num (int): how many times to apply frequency masking
 
     Inputs: feature_vector
-        - **feature_vector** (torch.FloatTensor): feature vector from audio file.
+        - **feature_vector** (torch.FloatTensor): feature vector from origin_audio file.
 
     Returns: feature_vector:
         - **feature_vector**: masked feature vector.
@@ -42,7 +42,7 @@ class SpecAugment(object):
         self.freq_mask_num = freq_mask_num
 
     def __call__(self, feature: Tensor) -> Tensor:
-        """ Provides SpecAugmentation for audio """
+        """ Provides SpecAugmentation for origin_audio """
         time_axis_length = feature.size(0)
         freq_axis_length = feature.size(1)
         time_mask_para = time_axis_length / 20      # Refer to "Specaugment on large scale dataset" paper
