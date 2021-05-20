@@ -1,4 +1,4 @@
-from STT import load_model, stt
+#from STT import load_model, stt
 from pprint import pprint as pp
 from basefunction.FindUMethod import *
 
@@ -20,13 +20,15 @@ if __name__ == "__main__":
         SearchingValue = input("keyword:")
         URL = input("URL:")
         Frequency(SearchingValue, URL)
+    """
     if i == '4':
         # no db ins
         print("Model loading... ")
         model, vocab = load_model()
         print("Done")
 
-        audio_path = 'STT/data/audio/full.wav'
+        audio_path = 'STT/data/origin_audio/full.wav'
 
         sentences = stt(model, vocab, audio_path)
         pp(sentences)
+        """
