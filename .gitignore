@@ -13,6 +13,7 @@ data/*
 
 #Embedding
 wordEmbedding/dataset/*
+wordEmbedding/runs/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
