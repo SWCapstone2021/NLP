@@ -134,12 +134,14 @@ def ScriptNoun(URL):
 def Frequency(keyword, URL):
     OnlyNoun = ScriptNoun(URL)
     TF = 0
-    for word in OnlyNoun:
-        if keyword in word:
-            TF += 1
+    KeywordList = KeyWordNoun(keyword)
+    for noun in KeywordList:
+        for word in OnlyNoun:
+            if noun in word:
+                TF += 1
     with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt', 'r', encoding='utf-8') as f:
         script = f.readlines()
-    ILF = 0
+    ILF = 1
     for line in script:
         if keyword in line:
             ILF += 1
@@ -187,3 +189,9 @@ def WordEmChk(word,wordset):
 def KorChk(word):
     hangul = re.compile('[^ ㄱ-ㅣ가-힣]+').sub('',word)
     return len(hangul)
+
+
+def KeyWordNoun(keyword):
+    mecab = Mecab()
+    KeywordResult = mecab.nouns(keyword)
+    return KeywordResult
