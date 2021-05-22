@@ -32,8 +32,7 @@ WavOption = {
 
 
 def MakeFile(URL, option=VttOption):
-    DownOption = option
-    with youtube_dl.YoutubeDL(DownOption) as ydl:
+    with youtube_dl.YoutubeDL(option) as ydl:
         ydl.download([URL])
         ChkFile(URL)
 
@@ -100,6 +99,8 @@ def ChkID(URL):
 
 
 def Ctrl_F(keyword, URL):
+    if not os.path.exists(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'):
+        MakeFile(URL)
     SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'
     TimeStamp = []
     with open(SubtitleFile) as f:
@@ -121,7 +122,7 @@ def ChkTxtFile(URL):
         MakeTXTFile(URL)
 
 
-def Noun(URL):
+def ScriptNoun(URL):
     ChkTxtFile(URL)
     with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt', 'r', encoding='utf-8') as f:
         script = f.read()
@@ -131,7 +132,7 @@ def Noun(URL):
 
 
 def Frequency(keyword, URL):
-    OnlyNoun = Noun(URL)
+    OnlyNoun = ScriptNoun(URL)
     TF = 0
     for word in OnlyNoun:
         if keyword in word:
@@ -149,12 +150,12 @@ def Frequency(keyword, URL):
 def WordEm_crtlF(SearchingValue,URL):
     TimeStamp=[]
     TimeStamp=Ctrl_F(SearchingValue,URL)
-    tmp=[]
+    WordEmTimeStamp=[]
     wordset = WordEmbedding(SearchingValue)
     for word in wordset:
-        tmp=Ctrl_F(word,URL)
-        if len(tmp):
-            for time in tmp:
+        WordEmTimeStamp=Ctrl_F(word,URL)
+        if len(WordEmTimeStamp):
+            for time in WordEmTimeStamp:
                 TimeStamp.append(time)
     return TimeStamp
 
@@ -171,6 +172,7 @@ def WordEmbedding(SearchingValue):
                 if len(wordset)==5:
                     return wordset
 
+
 def WordEmChk(word,wordset):
     if len(wordset) == 0:
         wordset.append(word)
@@ -180,6 +182,7 @@ def WordEmChk(word,wordset):
             wordset.append(word)
             return wordset       
         return wordset
+
 
 def KorChk(word):
     hangul = re.compile('[^ ㄱ-ㅣ가-힣]+').sub('',word)
