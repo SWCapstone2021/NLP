@@ -7,6 +7,7 @@ from math import log
 # -*- coding: utf-8 -*-
 import fasttext
 import fasttext.util
+import re
 
 YOUTUBE_REPO_PATH = '/home/seungmin/dmount/NLP/script'  # mount/NLP/script'
 
@@ -145,9 +146,41 @@ def Frequency(keyword, URL):
     return print(TF_IDF)
     # TF-IDF = TF * (log(N/df)) TF:단어 빈도수, N: 문장개수, IDF: 단어가 포함된 문장개수
 
+def WordEm_crtlF(SearchingValue,URL):
+    TimeStamp=[]
+    TimeStamp=Ctrl_F(SearchingValue,URL)
+    tmp=[]
+    wordset = WordEmbedding(SearchingValue)
+    for word in wordset:
+        tmp=Ctrl_F(word,URL)
+        if len(tmp):
+            for time in tmp:
+                TimeStamp.append(time)
+    return TimeStamp
 
+    
 def WordEmbedding(SearchingValue):
     ModelPath = 'wordembedding/dataset/cc.ko.300.bin'
     Model = fasttext.load_model(ModelPath)
-    for similiarity, word in Model.get_nearest_neighbors(SearchingValue,10):
-        print(f'{word}:{similiarity}')
+    wordset=[]
+    for similiarity, word in Model.get_nearest_neighbors(SearchingValue,20):
+        #print(f'{word}:{similiarity}')
+        if SearchingValue not in word:
+            if KorChk(word) :
+                wordset=WordEmChk(word,wordset)
+                if len(wordset)==5:
+                    return wordset
+
+def WordEmChk(word,wordset):
+    if len(wordset) == 0:
+        wordset.append(word)
+        return wordset
+    for index in wordset:
+        if index not in word:
+            wordset.append(word)
+            return wordset       
+        return wordset
+
+def KorChk(word):
+    hangul = re.compile('[^ ㄱ-ㅣ가-힣]+').sub('',word)
+    return len(hangul)
