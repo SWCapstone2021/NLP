@@ -7,7 +7,7 @@ import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 if __name__ == "__main__":
-    i = input("fucntion num: 1(extract subtitle), 2(ctrl+F), 3(Frequency), 4(Check stt performance)")
+    i = input("fucntion num: 1(extract subtitle), 2(ctrl+F), 3(Frequency), 4(Check stt performance), 5(word embedding)")
 
     if i == '1':
         URL = input("URL:")
@@ -32,3 +32,7 @@ if __name__ == "__main__":
         sentences = stt(model, vocab, audio_path)
         pp(sentences)
         """
+    if i == '5':
+        SearchingValue = input("찾을 단어: ")
+        WordEmbedding(SearchingValue)
+        
