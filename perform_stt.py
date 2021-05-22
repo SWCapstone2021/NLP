@@ -1,25 +1,29 @@
 import os
-from glob import glob
 import warnings
+from glob import glob
 
-import librosa
-import soundfile
 import Levenshtein as Lev
+import librosa
+import numpy as np
+import torch
 import torchaudio
 from torch import Tensor
-import torch
-import numpy as np
 
-from STT import load_model, stt
-from pprint import pprint as pp
-from basefunction.FindUMethod import MakeTXTFile, MakeFile
+from STT import load_model
+from STT.kospeech.models import (
+    DeepSpeech2,
+    ListenAttendSpell,
+)
+from basefunction.FindUMethod import MakeFile
 
 warnings.filterwarnings('ignore')
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
-print("Model loading... ")
-model, vocab = load_model()
+device = 'cuda' if torch.cuda.is_available else 'cpu'
+model_name = 'ds2'
+print(f"{model_name} model loading...")
+model, vocab = load_model(model_path=f'STT/models/{model_name}.pt')
 print("Done")
 
 
@@ -37,9 +41,13 @@ def __split_with_value(y, sr, intervals):
 
     i = 0
     while i < len_interval - 1:
-        wav = y[int(intervals[i]):int(intervals[i + 1])]
+        start = intervals[i] - 8000
+        end = intervals[i + 1] - 8000
+        if start < 0:
+            start = 0
+        wav = y[int(start):int(end)]
         signals.append(wav)
-        time_stamps.append(int(intervals[i]) / sr)
+        time_stamps.append(int(start) / sr)
         i += 1
 
     wav = y[int(intervals[i]):]
@@ -71,16 +79,21 @@ def list_stt(ids):
 
         sentences = list()
 
+        if isinstance(model, ListenAttendSpell):
+            model.encoder.device = device
+            model.decoder.device = device
+
+        elif isinstance(model, DeepSpeech2):
+            model.device = device
+
         for feature, input_length, time_stamp in zip(features, input_lengths, time_stamps):
-            y_hats = model.recognize(feature.unsqueeze(0).to('cuda'), input_length)
+            y_hats = model.recognize(feature.unsqueeze(0).to(device), input_length)
             sentence = vocab.label_to_string(y_hats.cpu().detach().numpy())
             sentences.append(sentence[0])
 
         our_label.append(sentences)
         true_label.append(true_script)
         youtube_label.append(subscribe)
-
-        break
 
     return true_label, youtube_label, our_label
 
@@ -146,12 +159,16 @@ if __name__ == "__main__":
     # make_scripts(ids)
     true_label, youtube_label, our_label = list_stt(ids)
 
+    print("id | youtube cer | out cer | result")
+
     for tl, yl, ol, id in zip(true_label, youtube_label, our_label, ids):
         youtube_cer = calculate_CER(tl, yl)
         our_cer = calculate_CER(tl, ol)
         print(f"{id} : {youtube_cer}% | {our_cer}% | {'WIN' if our_cer < youtube_cer else 'LOSE'}")
 
+        f = open(f"data/result/{id}.txt", 'w')
         for y, o in zip(yl, ol):
-            print(y)
-            print(o)
-            print('======')
+            f.write(y + '\n')
+            f.write(o + '\n')
+            f.write('======\n')
+        f.close()

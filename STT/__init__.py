@@ -12,15 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
+import sys
 from glob import glob
 
+import numpy as np
 import torch
 import torch.nn as nn
-import numpy as np
 import torchaudio
 from torch import Tensor
-
-import sys
 
 sys.path.append((os.path.dirname(__file__)))
 
@@ -93,7 +92,7 @@ def stt(model, vocab, audio_path):
     return sentences
 
 
-def load_model(model_path='STT/models/ds2.pt'):
+def load_model(model_path):
     device = 'cuda'
 
     model = torch.load(model_path, map_location=lambda storage, loc: storage).to(device)

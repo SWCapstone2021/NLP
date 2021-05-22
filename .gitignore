@@ -12,8 +12,8 @@ STT/models
 data/*
 
 #Embedding
-wordEmbedding/dataset/*
-wordEmbedding/runs/*
+wordEmbedding_kor2vec/*
+wordembedding/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

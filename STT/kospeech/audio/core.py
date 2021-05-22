@@ -63,9 +63,10 @@ def __split(y, sr):
         next_i = i
         while intervals[next_i][1] - intervals[next_i][0] < sr * 3 and intervals[next_i][0] - intervals[i][
             0] < sr * 5:
-            if next_i == len_interval - 1:
-                break
             next_i += 2
+            if next_i > len_interval - 1:
+                next_i = len_interval - 1
+                break
 
         if i == next_i:
             next_i += 1

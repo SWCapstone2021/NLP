@@ -1,10 +1,9 @@
-import os
-import torch
-import torch.nn as nn
 import logging
 import platform
+
 import librosa
 import soundfile
+import torch
 
 logger = logging.getLogger(__name__)
 
@@ -34,30 +33,35 @@ def check_envirionment(use_cuda: bool) -> torch.device:
     return device
 
 
-def split_sound_n_save(file_name='data/sound.wav'):
+def split_sound_n_save(file_name='data/sound.wav', base_dir='temp'):
     y, sr = librosa.load(file_name, sr=16000)
 
     intervals = librosa.effects.split(y, 25)
+
     len_interval = len(intervals)
-    wavs = []
+    signals = list()
+    time_stamps = list()
 
     i = 0
     while i < len_interval - 1:
+
         next_i = i
-        while intervals[next_i][1] - intervals[next_i][0] < 16000 * 3 and intervals[next_i][0] - intervals[i][
-            0] < 16000 * 5:
-            if next_i == len_interval - 1:
-                break
+        while intervals[next_i][1] - intervals[next_i][0] < sr * 3 and intervals[next_i][0] - intervals[i][
+            0] < sr * 5:
             next_i += 2
+            if next_i > len_interval - 1:
+                next_i = len_interval - 1
+                break
 
         if i == next_i:
             next_i += 1
 
         wav = y[intervals[i][0]:intervals[next_i][0]]
-        wavs.append(wav)
+        signals.append(wav)
+        time_stamps.append(intervals[i][0] / sr)
 
         i = next_i
-    base_dir = os.path.dirname(file_name)
-    for i, wav in enumerate(wavs):
-        soundfile.write(f'{base_dir}/{i}.wav', wav, sr, format='WAV', endian='LITTLE',
+
+    for i, (wav, time) in enumerate(zip(signals, time_stamps)):
+        soundfile.write(f'{base_dir}/{time}.wav', wav, sr, format='WAV', endian='LITTLE',
                         subtype='PCM_16')
