@@ -3,11 +3,14 @@ import youtube_dl
 import os
 from os.path import basename
 from konlpy.tag import Mecab
-from math import log
 # -*- coding: utf-8 -*-
 import fasttext
 import fasttext.util
 import re
+from numpy import dot
+from numpy.linalg import norm
+import numpy as np
+import operator
 
 YOUTUBE_REPO_PATH = '/home/seungmin/dmount/NLP/script'  # mount/NLP/script'
 
@@ -35,6 +38,7 @@ def MakeFile(URL, option=VttOption):
     with youtube_dl.YoutubeDL(option) as ydl:
         ydl.download([URL])
         ChkFile(URL)
+
 
 def MakeVttForm(SubtitleFile):
     f = open(SubtitleFile, 'r')
@@ -131,24 +135,6 @@ def ScriptNoun(URL):
     return NounResult
 
 
-def Frequency(keyword, URL):
-    OnlyNoun = ScriptNoun(URL)
-    TF = 0
-    KeywordList = KeyWordNoun(keyword)
-    for noun in KeywordList:
-        for word in OnlyNoun:
-            if noun in word:
-                TF += 1
-    with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt', 'r', encoding='utf-8') as f:
-        script = f.readlines()
-    ILF = 1
-    for line in script:
-        if keyword in line:
-            ILF += 1
-    TF_IDF = TF * log(len(script) / ILF)
-    return print(TF_IDF)
-    # TF-IDF = TF * (log(N/df)) TF:단어 빈도수, N: 문장개수, IDF: 단어가 포함된 문장개수
-
 def WordEm_crtlF(SearchingValue,URL):
     TimeStamp=[]
     TimeStamp=Ctrl_F(SearchingValue,URL)
@@ -195,3 +181,32 @@ def KeyWordNoun(keyword):
     mecab = Mecab()
     KeywordResult = mecab.nouns(keyword)
     return KeywordResult
+
+
+def cos_sim(word1, word2):
+    return dot(word1,word2)/(norm(word1)*norm(word2))
+
+
+def CosinSimilar(keyword,URL):
+    OnlyNoun = ScriptNoun(URL)
+    WordCnt={}
+    cnt=0
+    for word in OnlyNoun:
+        if word in WordCnt:
+            cnt = WordCnt[word]
+            WordCnt[word]= cnt+1
+        else:
+            WordCnt[word]=1
+   
+    mostwords = Sortcnt(WordCnt)
+    result = 0
+    KeywordList = KeyWordNoun(keyword)
+    ModelPath = 'wordembedding/dataset/cc.ko.300.bin'
+    Model = fasttext.load_model(ModelPath)
+    for keyword in KeywordList:
+        for word in mostwords:
+            result += cos_sim(Model.get_word_vector(keyword),Model.get_word_vector(word[0]))
+    return result / (len(KeywordList) * 5)
+
+def Sortcnt(WordCnt):
+    return sorted(WordCnt.items(), key=operator.itemgetter(1))[-5:]
