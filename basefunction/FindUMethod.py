@@ -4,6 +4,9 @@ import os
 from os.path import basename
 from konlpy.tag import Mecab
 from math import log
+# -*- coding: utf-8 -*-
+import fasttext
+import fasttext.util
 
 YOUTUBE_REPO_PATH = '/home/seungmin/dmount/NLP/script'  # mount/NLP/script'
 
@@ -33,43 +36,46 @@ def MakeFile(URL, option=VttOption):
         ydl.download([URL])
         ChkFile(URL)
 
+def MakeVttForm(SubtitleFile):
+    f = open(SubtitleFile, 'r')
+    lines = f.readlines()
+    f.close()
+    fw = open(SubtitleFile,'w')
+    for line in lines[:4]:
+        fw.write(line)
+    for idx, line in enumerate(lines[6::8]):
+        skip = False
+        time_stamp = True
+        clean = ''
+        time = ''
+        for c in line:
+            if c == '>':
+                skip = False
+                time_stamp = False
+                continue
+
+            if c == '<' or skip:
+                if time_stamp and skip:
+                    time += c
+                skip = True
+                continue
+
+            clean += c
+        if time_stamp:
+            try:
+                time = lines[(idx + 1) * 8].split(' ')[0]
+            except:
+                pass
+        fw.write(f'{time}\n{clean}\n')
+    fw.close()
+
 
 def ChkFile(URL):
     if not os.path.exists(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'):
         VttOption['writeautomaticsub'] = True
         MakeFile(URL, option=VttOption)
         SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.vtt'
-        f = open(SubtitleFile, 'r')
-        lines = f.readlines()
-        f.close()
-        fw = open(SubtitleFile, 'w')
-        for line in lines[:4]:
-            fw.write(line)
-        for idx, line in enumerate(lines[6::8]):
-            skip = False
-            time_stamp = True
-            clean = ''
-            time = ''
-            for c in line:
-                if c == '>':
-                    skip = False
-                    time_stamp = False
-                    continue
-
-                if c == '<' or skip:
-                    if time_stamp and skip:
-                        time += c
-                    skip = True
-                    continue
-
-                clean += c
-            if time_stamp:
-                try:
-                    time = lines[(idx + 1) * 8].split(' ')[0]
-                except:
-                    pass
-            fw.write(f'{time}\n{clean}\n')
-        fw.close()
+        MakeVttForm(SubtitleFile)
         VttOption['writeautomaticsub'] = False
         MakeFile(URL, option=WavOption)
 
@@ -138,3 +144,10 @@ def Frequency(keyword, URL):
     TF_IDF = TF * log(len(script) / ILF)
     return print(TF_IDF)
     # TF-IDF = TF * (log(N/df)) TF:단어 빈도수, N: 문장개수, IDF: 단어가 포함된 문장개수
+
+
+def WordEmbedding(SearchingValue):
+    ModelPath = 'wordembedding/dataset/cc.ko.300.bin'
+    Model = fasttext.load_model(ModelPath)
+    for similiarity, word in Model.get_nearest_neighbors(SearchingValue,10):
+        print(f'{word}:{similiarity}')
