@@ -33,6 +33,7 @@ if __name__ == "__main__":
         pp(sentences)
         """
     if i == '5':
-        SearchingValue = input("찾을 단어: ")
-        WordEmbedding(SearchingValue)
+        SearchingValue = input("keyword:")
+        URL = input("URL:")
+        WordEm_crtlF(SearchingValue,URL)
         
