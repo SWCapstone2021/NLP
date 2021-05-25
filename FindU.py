@@ -19,7 +19,7 @@ if __name__ == "__main__":
     if i == '3':
         SearchingValue = input("keyword:")
         URL = input("URL:")
-        Frequency(SearchingValue, URL)
+        CosinSimilar(SearchingValue, URL)
     """
     if i == '4':
         # no db ins
@@ -36,4 +36,3 @@ if __name__ == "__main__":
         SearchingValue = input("keyword:")
         URL = input("URL:")
         WordEm_crtlF(SearchingValue,URL)
-        

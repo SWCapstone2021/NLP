@@ -22,6 +22,7 @@ warnings.filterwarnings('ignore')
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
+sr = 16000
 device = 'cuda' if torch.cuda.is_available else 'cpu'
 model_name = 'ds2'
 print(f"{model_name} model loading...")
@@ -41,25 +42,75 @@ def make_scripts(ids):
             MakeFile(f'https://www.youtube.com/watch?v={id}')
 
 
-def __split_with_value(y, sr, intervals):
-    len_interval = len(intervals)
+def get_duration(audio):
+    return librosa.core.get_duration(audio, sr=sr)
+
+
+def get_silence(sec):
+    return np.zeros(sr * sec)
+
+
+def load_audio(path, pre_silence_length=0, post_silence_length=0):
+    audio = librosa.core.load(path, sr=sr)[0]
+    if pre_silence_length > 0 or post_silence_length > 0:
+        audio = np.concatenate([
+            get_silence(pre_silence_length),
+            audio,
+            get_silence(post_silence_length),
+        ])
+    return audio
+
+
+def abs_mean(x):
+    return abs(x).mean()
+
+
+def remove_breath(audio):
+    edges = librosa.effects.split(
+        audio, top_db=40, frame_length=128, hop_length=32)
+
+    for idx in range(len(edges)):
+        start_idx, end_idx = edges[idx][0], edges[idx][1]
+        if start_idx < len(audio):
+            if abs_mean(audio[start_idx:end_idx]) < abs_mean(audio) - 0.05:
+                audio[start_idx:end_idx] = 0
+
+    return audio
+
+
+def split_on_silence_with_librosa(
+        audio_path, top_db=40, frame_length=1024, hop_length=256,
+        skip_idx=0, min_segment_length=0.5):
+    audio, sr = librosa.load(audio_path, sr=16000)
+
+    edges = librosa.effects.split(audio,
+                                  top_db=top_db, frame_length=frame_length, hop_length=hop_length)
+
+    new_audio = np.zeros_like(audio)
+    for idx, (start, end) in enumerate(edges[skip_idx:]):
+        new_audio[start:end] = remove_breath(audio[start:end])
+
+    audio = new_audio
+    edges = librosa.effects.split(audio,
+                                  top_db=top_db, frame_length=frame_length, hop_length=hop_length)
+
     signals = list()
     time_stamps = list()
+    for idx, (start, end) in enumerate(edges[skip_idx:]):
+        segment = audio[start:end]
+        duration = get_duration(segment)
 
-    i = 0
-    while i < len_interval - 1:
-        start = intervals[i] - 9000
-        end = intervals[i + 1] - 9000
-        if start < 0:
-            start = 0
-        wav = y[int(start):int(end)]
-        signals.append(wav)
-        time_stamps.append(int(start) / sr)
-        i += 1
+        if duration <= min_segment_length:
+            continue
 
-    wav = y[int(intervals[i]):]
-    signals.append(wav)
-    time_stamps.append(int(intervals[i]) / sr)
+        padded_segment = np.concatenate([
+            get_silence(1),
+            segment,
+            get_silence(1),
+        ])
+
+        signals.append(padded_segment)
+        time_stamps.append(int(start / sr))
 
     return signals, time_stamps
 
@@ -71,17 +122,15 @@ def list_stt(ids):
 
     for id in ids:
         print(id)
-        audio_path = f'data/origin_audio/{id}.wav'
+        audio_path = f'data/origin_audio/clean/{id}.wav'
         true_script = open(f'data/true/{id}.txt').read().splitlines()
         script = open(f'data/script/{id}.ko.vtt').read().splitlines()[4:]
 
-        times = list()
         subscribe = list()
         for idx in range(0, len(script), 3):
-            times.append(string_to_ms(script[idx]))
             subscribe.append(script[idx + 1])
 
-        features, input_lengths, time_stamps = parse_audio(audio_path, times)
+        features, input_lengths, time_stamps = parse_audio(audio_path)
 
         sentences = list()
 
@@ -104,9 +153,8 @@ def list_stt(ids):
     return true_label, youtube_label, our_label
 
 
-def parse_audio(audio_path, times):
-    signal, sr = librosa.load(audio_path, sr=16000)
-    signals, time_stamps = __split_with_value(signal, sr, times)
+def parse_audio(audio_path):
+    signals, time_stamps = split_on_silence_with_librosa(audio_path)
     features = list()
     input_lengths = list()
 
@@ -162,7 +210,7 @@ def calculate_CER(y, y_hat):
 
 
 if __name__ == "__main__":
-    ids = [os.path.basename(x)[:-4] for x in glob('data/true/*')]
+    ids = [os.path.basename(x)[:-4] for x in glob('data/true_one/*')]
 
     # make_scripts(ids)
     true_label, youtube_label, our_label = list_stt(ids)
