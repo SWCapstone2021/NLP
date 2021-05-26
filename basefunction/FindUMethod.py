@@ -131,6 +131,27 @@ def senteceTXT(URL):
     fw.close()
 
 
+def SplitBySentence(txtfile):
+    sentence_text= ''
+    lines = txtfile.readlines()
+    for line in lines:
+        for sent in kss.split_sentences(line):
+            sent = sent + '\n'
+            sentence_text += sent
+    return sentence_text
+
+
+def senteceTXT(URL):
+    entire_text=''
+    SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'
+    f = open(SubtitleFile, 'r')
+    entire_text = SplitBySentence(f)
+    fw = open(SubtitleFile,'w')
+    fw.write(entire_text)
+    f.close()
+    fw.close()
+
+
 def ChkID(URL):
     id = URL.rsplit('=', 1)[-1]
     return id
@@ -246,7 +267,7 @@ def CosinSimilar(keyword,URL):
 def Sortcnt(WordCnt):
     return sorted(WordCnt.items(), key=operator.itemgetter(1))[-5:]
 
-from pprint import pprint as pp
+    
 def Summary(URL):
     ChkTxtFile(URL)
     SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'
