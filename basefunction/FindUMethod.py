@@ -3,6 +3,7 @@ import youtube_dl
 import os
 from os.path import basename
 from konlpy.tag import Mecab
+from konlpy.utils import pprint
 # -*- coding: utf-8 -*-
 import fasttext
 import fasttext.util
@@ -10,7 +11,9 @@ import re
 from numpy import dot
 from numpy.linalg import norm
 import numpy as np
+import kss
 import operator
+from krwordrank.sentence import summarize_with_sentences
 
 YOUTUBE_REPO_PATH = '/home/seungmin/dmount/NLP/script'  # mount/NLP/script'
 
@@ -38,6 +41,11 @@ def MakeFile(URL, option=VttOption):
     with youtube_dl.YoutubeDL(option) as ydl:
         ydl.download([URL])
         ChkFile(URL)
+
+def ChkVttForm(SubtitleFile):
+    f = open(SubtitleFile, 'r')
+    lines = f.readlines()
+    f.close()
 
 
 def MakeVttForm(SubtitleFile):
@@ -89,11 +97,37 @@ def MakeTXTFile(URL):
     f = open(SubtitleFile, 'r')
     lines = f.readlines()
     entire_text = ''
-    for line in lines[5::3]:
+    for line in lines[5:]:
+        if len(line)==0 or re.search('-->',line):
+            continue
+        line=line.rsplit('\n')[0]
+        line = line + ' '
         entire_text += line
     f.close()
     fw = open('%s.txt' % (SubtitleFile[:-4]), 'w')
     fw.write(entire_text)
+    fw.close()
+    senteceTXT(URL)
+
+
+def SplitBySentence(txtfile):
+    sentence_text= ''
+    lines = txtfile.readlines()
+    for line in lines:
+        for sent in kss.split_sentences(line):
+            sent = sent + '\n'
+            sentence_text += sent
+    return sentence_text
+
+
+def senteceTXT(URL):
+    entire_text=''
+    SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'
+    f = open(SubtitleFile, 'r')
+    entire_text = SplitBySentence(f)
+    fw = open(SubtitleFile,'w')
+    fw.write(entire_text)
+    f.close()
     fw.close()
 
 
@@ -208,5 +242,13 @@ def CosinSimilar(keyword,URL):
             result += cos_sim(Model.get_word_vector(keyword),Model.get_word_vector(word[0]))
     return result / (len(KeywordList) * 5)
 
+
 def Sortcnt(WordCnt):
     return sorted(WordCnt.items(), key=operator.itemgetter(1))[-5:]
+
+from pprint import pprint as pp
+def Summary(URL):
+    ChkTxtFile(URL)
+    SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'
+    texts = open(SubtitleFile, 'r')
+    lines = texts.readlines()
