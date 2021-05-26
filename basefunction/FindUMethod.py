@@ -2,7 +2,8 @@ from pytube import YouTube
 import youtube_dl
 import os
 from os.path import basename
-from konlpy.tag import Mecab
+from konlpy.tag import Mecab, Kkma
+from konlpy.utils import pprint
 # -*- coding: utf-8 -*-
 import fasttext
 import fasttext.util
@@ -10,7 +11,7 @@ import re
 from numpy import dot
 from numpy.linalg import norm
 import numpy as np
-import operator
+import kss
 
 YOUTUBE_REPO_PATH = '/home/seungmin/dmount/NLP/script'  # mount/NLP/script'
 
@@ -90,10 +91,33 @@ def MakeTXTFile(URL):
     lines = f.readlines()
     entire_text = ''
     for line in lines[5::3]:
+        line=line.rsplit('\n')[0]
+        line = line + ' '
         entire_text += line
     f.close()
     fw = open('%s.txt' % (SubtitleFile[:-4]), 'w')
     fw.write(entire_text)
+    fw.close()
+
+
+def SplitBySentence(txtfile):
+    sentence_text= ''
+    lines = txtfile.readlines()
+    for line in lines:
+        for sent in kss.split_sentences(line):
+            sent = sent + '\n'
+            sentence_text += sent
+    return sentence_text
+
+
+def senteceTXT(URL):
+    entire_text=''
+    SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'
+    f = open(SubtitleFile, 'r')
+    entire_text = SplitBySentence(f)
+    fw = open(SubtitleFile,'w')
+    fw.write(entire_text)
+    f.close()
     fw.close()
 
 
@@ -208,5 +232,17 @@ def CosinSimilar(keyword,URL):
             result += cos_sim(Model.get_word_vector(keyword),Model.get_word_vector(word[0]))
     return result / (len(KeywordList) * 5)
 
+
 def Sortcnt(WordCnt):
     return sorted(WordCnt.items(), key=operator.itemgetter(1))[-5:]
+
+
+def Summary(URL):
+    ChkTxtFile(URL)
+    senteceTXT(URL)
+    SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'
+    texts = open(SubtitleFile, 'r')
+    lines = texts.readlines()
+
+    #keywords, sents = summarize_with_sentences(lines, num_keywords=100, num_keysents=10)
+    #print(sents)
