@@ -18,6 +18,7 @@ wordembedding/*
 #QA
 QA/runs/*
 QA/models/*
+QA/data/*
 
 # Byte-compiled / optimized / DLL files
 
