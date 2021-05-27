@@ -10,7 +10,7 @@ class OktTokenizer:
         tokens = self.okt.pos(text)
         return tokens
 
-text = open('../script/GZJornwzM_k.ko.txt','r').read()
+text = open('../script/GZJornwzM_k.ko.txt','r').read() #여기 바꾸기
 
 
 # 1. init
