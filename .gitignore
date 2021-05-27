@@ -11,6 +11,8 @@ STT/models
 .idea/
 data/*
 
+# textrank
+Summarization/*
 #Embedding
 wordEmbedding_kor2vec/*
 wordembedding/*

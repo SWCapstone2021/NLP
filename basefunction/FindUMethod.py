@@ -3,7 +3,6 @@ import youtube_dl
 import os
 from os.path import basename
 from konlpy.tag import Mecab
-from konlpy.utils import pprint
 # -*- coding: utf-8 -*-
 import fasttext
 import fasttext.util
@@ -13,9 +12,9 @@ from numpy.linalg import norm
 import numpy as np
 import kss
 import operator
-from krwordrank.sentence import summarize_with_sentences
+from Summarization.textrankr2 import TextRank
 
-YOUTUBE_REPO_PATH = '/home/seungmin/dmount/NLP/script'  # mount/NLP/script'
+YOUTUBE_REPO_PATH = '/home/heesu/mount/NLP/script'  # mount/NLP/script'
 
 VttOption = {
     'skip_download': True,
@@ -267,9 +266,25 @@ def CosinSimilar(keyword,URL):
 def Sortcnt(WordCnt):
     return sorted(WordCnt.items(), key=operator.itemgetter(1))[-5:]
 
-    
+
+class MecabTokenizer:
+    mecab = Mecab()
+
+    def __call__(self, text):
+        tokens = self.mecab.pos(text)
+        return tokens
+
+
 def Summary(URL):
     ChkTxtFile(URL)
     SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'
-    texts = open(SubtitleFile, 'r')
-    lines = texts.readlines()
+    texts = open(SubtitleFile, 'r').read()
+    mytokenizer = MecabTokenizer()
+
+    tokens = mytokenizer(texts)
+    textRank = TextRank(mytokenizer)
+
+    summerized = textRank.summarize(texts, 0.1)
+
+    return summerized
+
