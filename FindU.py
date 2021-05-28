@@ -36,3 +36,7 @@ if __name__ == "__main__":
         SearchingValue = input("keyword:")
         URL = input("URL:")
         WordEm_crtlF(SearchingValue,URL)
+
+    if i == '6':
+        URL = input("URL:")
+        Summary(URL)
