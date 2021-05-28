@@ -24,12 +24,12 @@ if __name__ == "__main__":
 
     if i == '4':
         print("Load model...", end='')
-        model, vocab = load_stt_model()
+        stt_model, stt_vocab = load_stt_model()
         print("done")
 
         audio_path = 'data/origin_audio/2YD2p24EKb4.wav'
 
-        sentences = stt(model, vocab, audio_path)
+        sentences = stt(stt_model, stt_vocab, audio_path)
         # from pprint import pprint as pp
         # pp(sentences)
 
@@ -44,10 +44,10 @@ if __name__ == "__main__":
 
     if i == '7':
         print("Load model...", end='')
-        model, tokenizer = load_qa_model()
+        qa_model, qa_tokenizer = load_qa_model()
         print("done")
 
         question = '개방적인 곳은?'
-        answers = QA_system(model, tokenizer, question, json_file)
+        answers = QA_system(qa_model, qa_tokenizer, question, json_file)
         # from pprint import pprint as pp
         # pp(answers)

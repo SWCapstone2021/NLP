@@ -19,12 +19,12 @@
 | Model path | 'STT/models/ds2.pt' |
 
 ```python
-from STT import load_model, stt
+from STT import load_stt_model, stt
 
-model, vocab = load_model()  # model과 vocab은 서버가 시작할 때 load
+stt_model, stt_vocab = load_stt_model()  # model과 vocab은 서버가 시작할 때 load
 audio_path = 'your/audio_path/origin_audio.wav'
 
-sentences = stt(model, vocab, audio_path)  # sentences는 list로 (시간, 자막)으로 구성
+sentences = stt(stt_model, stt_vocab, audio_path)  # sentences는 list로 (시간, 자막)으로 구성
 >> sentences[0] = (3.2, "번역된 자막이 출력됩니다.")
 ```
 
@@ -67,6 +67,25 @@ cos-similarity를 사용하여 영상의 신뢰도기능을 수하애한다. 신
 ### Word Embedding
 
 ### QA System
+
+사용자가 더 인간적인 질문을 던지고 이에 해당하는 답변을 찾을 수 있다.
+
+|            |                   |
+| ---------- | ----------------- |
+| Dataset    | KoQuAD1.0         |
+| Model      | bert-multilingual |
+| Period     | Iteration 20      |
+| Model path | 'QA/models/*'     |
+
+```python
+from QA import load_qa_model, QA_system
+
+qa_model, qa_tokenizer = load_qa_model()  # model과 tokenizer는 서버가 시작할 때 load
+
+question = 'Your Question'
+answers = QA_system(qa_model, qa_tokenizer, question, json_script)  # answers는 list로 (index, 답변)으로 구성, index는 해당 답변이 출현하는 script의 index
+>> (index, "답변")
+```
 
 ### Summarization
 
