@@ -2,13 +2,11 @@ from pytube import YouTube
 import youtube_dl
 import os
 from os.path import basename
-from konlpy.tag import Mecab
+from konlpy.tag import Okt
 # -*- coding: utf-8 -*-
 import fasttext
 import fasttext.util
 import re
-from numpy import dot
-from numpy.linalg import norm
 import numpy as np
 import kss
 import operator
@@ -184,8 +182,8 @@ def ScriptNoun(URL):
     ChkTxtFile(URL)
     with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt', 'r', encoding='utf-8') as f:
         script = f.read()
-    mecab = Mecab()
-    NounResult = mecab.nouns(script)
+    okt = Okt()
+    NounResult = okt.nouns(script)
     return NounResult
 
 
@@ -232,8 +230,8 @@ def KorChk(word):
 
 
 def KeyWordNoun(keyword):
-    mecab = Mecab()
-    KeywordResult = mecab.nouns(keyword)
+    okt = Okt()
+    KeywordResult = okt.nouns(keyword)
     return KeywordResult
 
 
@@ -251,15 +249,17 @@ def CosinSimilar(keyword,URL):
             WordCnt[word]= cnt+1
         else:
             WordCnt[word]=1
-   
     mostwords = Sortcnt(WordCnt)
     result = 0
     KeywordList = KeyWordNoun(keyword)
     ModelPath = 'wordembedding/dataset/cc.ko.300.bin'
     Model = fasttext.load_model(ModelPath)
     for keyword in KeywordList:
+        print(keyword)
         for word in mostwords:
+            print(word)
             result += cos_sim(Model.get_word_vector(keyword),Model.get_word_vector(word[0]))
+            print(result)
     return result / (len(KeywordList) * 5)
 
 
@@ -267,11 +267,11 @@ def Sortcnt(WordCnt):
     return sorted(WordCnt.items(), key=operator.itemgetter(1))[-5:]
 
 
-class MecabTokenizer:
-    mecab = Mecab()
+class OktTokenizer:
+    okt = Okt()
 
     def __call__(self, text):
-        tokens = self.mecab.pos(text)
+        tokens = self.okt.pos(text)
         return tokens
 
 
@@ -279,7 +279,7 @@ def Summary(URL):
     ChkTxtFile(URL)
     SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'
     texts = open(SubtitleFile, 'r').read()
-    mytokenizer = MecabTokenizer()
+    mytokenizer = OktTokenizer()
 
     tokens = mytokenizer(texts)
     textRank = TextRank(mytokenizer)
