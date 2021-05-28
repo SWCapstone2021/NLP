@@ -16,7 +16,6 @@ from STT.kospeech.models import (
     DeepSpeech2,
     ListenAttendSpell,
 )
-from basefunction.FindUMethod import MakeFile
 
 warnings.filterwarnings('ignore')
 
@@ -25,20 +24,13 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 device = 'cuda' if torch.cuda.is_available else 'cpu'
 model_name = 'ds2'
 print(f"{model_name} model loading...")
-model, vocab = load_model(model_path=f'STT/models/{model_name}.pt')
+model, vocab = load_model(model_path=f'models/{model_name}.pt')
 print("Done")
 
 
 def save_audio(signals, sr):
     for i, signal in enumerate(signals):
         soundfile.write(f'data/audio/{i}.wav', signal, sr, format='WAV', endian='LITTLE', subtype='PCM_16')
-
-
-def make_scripts(ids):
-    for id in ids:
-        if not os.path.exists(f'data/origin_audio/{id}.wav') or not os.path.exists(f'data/scripts/{id}.ko.vtt'):
-            print(f"Make scripts about {id}")
-            MakeFile(f'https://www.youtube.com/watch?v={id}')
 
 
 def __split_with_value(y, sr, intervals):

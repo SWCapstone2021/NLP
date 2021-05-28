@@ -16,6 +16,7 @@ wordembedding/dataset/*
 #QA
 QA/runs/*
 QA/models/*
+QA/models_origin/*
 QA/data/*
 
 # Byte-compiled / optimized / DLL files

@@ -16,7 +16,7 @@ def association_f(keyword, json_file, model):
     return TimeStamp
 
 
-def load_model():
+def load_wm_model():
     modelPath = 'wordembedding/dataset/cc.ko.300.bin'
     model = fasttext.load_model(modelPath)
 

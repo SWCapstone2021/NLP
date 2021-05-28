@@ -13,43 +13,48 @@
 # limitations under the License.
 
 import warnings
-import numpy as np
-import librosa
 
+import librosa
+import numpy as np
 from astropy.modeling import ParameterError
 from numpy.lib.stride_tricks import as_strided
-from kospeech.utils import logger
 
 
-def load_audio(audio_path: str, del_silence: bool = False, extension: str = 'pcm') -> np.ndarray:
-    """
-    Load origin_audio file (PCM) to sound. if del_silence is True, Eliminate all sounds below 30dB.
-    If exception occurs in numpy.memmap(), return None.
-    """
-    try:
-        if extension == 'pcm':
-            signal = np.memmap(audio_path, dtype='h', mode='r').astype('float32')
+def split_on_silence_with_librosa(
+        audio_path, top_db=40, frame_length=1024, hop_length=256,
+        skip_idx=0, min_segment_length=0.5):
+    audio, sr = librosa.load(audio_path, sr=16000)
 
-            if del_silence:
-                non_silence_indices = split(signal, top_db=30)
-                signal = np.concatenate([signal[start:end] for start, end in non_silence_indices])
+    edges = librosa.effects.split(audio,
+                                  top_db=top_db, frame_length=frame_length, hop_length=hop_length)
 
-            return signal / 32767  # normalize origin_audio
+    new_audio = np.zeros_like(audio)
+    for idx, (start, end) in enumerate(edges[skip_idx:]):
+        new_audio[start:end] = remove_breath(audio[start:end])
 
-        elif extension == 'wav' or extension == 'flac':
-            signal, sr = librosa.load(audio_path, sr=16000)
-            signals, time_stamps = __split(signal, sr)
-            return signals, time_stamps
+    audio = new_audio
+    edges = librosa.effects.split(audio,
+                                  top_db=top_db, frame_length=frame_length, hop_length=hop_length)
 
-    except ValueError:
-        logger.debug('ValueError in {0}'.format(audio_path))
-        return None
-    except RuntimeError:
-        logger.debug('RuntimeError in {0}'.format(audio_path))
-        return None
-    except IOError:
-        logger.debug('IOError in {0}'.format(audio_path))
-        return None
+    signals = list()
+    time_stamps = list()
+    for idx, (start, end) in enumerate(edges[skip_idx:]):
+        segment = audio[start:end]
+        duration = get_duration(segment)
+
+        if duration <= min_segment_length:
+            continue
+
+        padded_segment = np.concatenate([
+            get_silence(1),
+            segment,
+            get_silence(1),
+        ])
+
+        signals.append(padded_segment)
+        time_stamps.append(int(start / sr))
+
+    return signals, time_stamps
 
 
 def __split(y, sr):

@@ -5,7 +5,6 @@ def json2list(json_file):
 
     return _list
 
-
 def ctrl_f(keyword,json_file):
     TimeStamp=[]
     for line in json_file:
