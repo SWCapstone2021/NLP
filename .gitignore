@@ -14,7 +14,6 @@ data/*
 # textrank
 Summarization/*
 #Embedding
-wordEmbedding_kor2vec/*
 wordembedding/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
