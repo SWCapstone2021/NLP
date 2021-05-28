@@ -50,4 +50,3 @@ if __name__ == "__main__":
         question = '개방적인 곳은?'
         answers = QA_system(qa_model, qa_tokenizer, question, json_file)
         # pp(answers)
-
