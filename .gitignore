@@ -14,7 +14,14 @@ data/*
 #Embedding
 wordEmbedding_kor2vec/*
 wordembedding/*
+
+#QA
+QA/runs/*
+QA/models/*
+QA/data/*
+
 # Byte-compiled / optimized / DLL files
+
 __pycache__/
 *.py[cod]
 *$py.class
