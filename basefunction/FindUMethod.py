@@ -2,17 +2,17 @@ from pytube import YouTube
 import youtube_dl
 import os
 from os.path import basename
-from konlpy.tag import Mecab
+from konlpy.tag import Okt
 # -*- coding: utf-8 -*-
 import fasttext
 import fasttext.util
 import re
-from numpy import dot
-from numpy.linalg import norm
 import numpy as np
+import kss
 import operator
+from Summarization.textrankr2 import TextRank
 
-YOUTUBE_REPO_PATH = '/home/seungmin/dmount/NLP/script'  # mount/NLP/script'
+YOUTUBE_REPO_PATH = '/home/heesu/mount/NLP/script'  # mount/NLP/script'
 
 VttOption = {
     'skip_download': True,
@@ -38,6 +38,11 @@ def MakeFile(URL, option=VttOption):
     with youtube_dl.YoutubeDL(option) as ydl:
         ydl.download([URL])
         ChkFile(URL)
+
+def ChkVttForm(SubtitleFile):
+    f = open(SubtitleFile, 'r')
+    lines = f.readlines()
+    f.close()
 
 
 def MakeVttForm(SubtitleFile):
@@ -89,11 +94,58 @@ def MakeTXTFile(URL):
     f = open(SubtitleFile, 'r')
     lines = f.readlines()
     entire_text = ''
-    for line in lines[5::3]:
+    for line in lines[5:]:
+        if len(line)==0 or re.search('-->',line):
+            continue
+        line=line.rsplit('\n')[0]
+        line = line + ' '
         entire_text += line
     f.close()
     fw = open('%s.txt' % (SubtitleFile[:-4]), 'w')
     fw.write(entire_text)
+    fw.close()
+    senteceTXT(URL)
+
+
+def SplitBySentence(txtfile):
+    sentence_text= ''
+    lines = txtfile.readlines()
+    for line in lines:
+        for sent in kss.split_sentences(line):
+            sent = sent + '\n'
+            sentence_text += sent
+    return sentence_text
+
+
+def senteceTXT(URL):
+    entire_text=''
+    SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'
+    f = open(SubtitleFile, 'r')
+    entire_text = SplitBySentence(f)
+    fw = open(SubtitleFile,'w')
+    fw.write(entire_text)
+    f.close()
+    fw.close()
+
+
+def SplitBySentence(txtfile):
+    sentence_text= ''
+    lines = txtfile.readlines()
+    for line in lines:
+        for sent in kss.split_sentences(line):
+            sent = sent + '\n'
+            sentence_text += sent
+    return sentence_text
+
+
+def senteceTXT(URL):
+    entire_text=''
+    SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'
+    f = open(SubtitleFile, 'r')
+    entire_text = SplitBySentence(f)
+    fw = open(SubtitleFile,'w')
+    fw.write(entire_text)
+    f.close()
     fw.close()
 
 
@@ -130,8 +182,8 @@ def ScriptNoun(URL):
     ChkTxtFile(URL)
     with open(f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt', 'r', encoding='utf-8') as f:
         script = f.read()
-    mecab = Mecab()
-    NounResult = mecab.nouns(script)
+    okt = Okt()
+    NounResult = okt.nouns(script)
     return NounResult
 
 
@@ -178,8 +230,8 @@ def KorChk(word):
 
 
 def KeyWordNoun(keyword):
-    mecab = Mecab()
-    KeywordResult = mecab.nouns(keyword)
+    okt = Okt()
+    KeywordResult = okt.nouns(keyword)
     return KeywordResult
 
 
@@ -197,16 +249,42 @@ def CosinSimilar(keyword,URL):
             WordCnt[word]= cnt+1
         else:
             WordCnt[word]=1
-   
     mostwords = Sortcnt(WordCnt)
     result = 0
     KeywordList = KeyWordNoun(keyword)
     ModelPath = 'wordembedding/dataset/cc.ko.300.bin'
     Model = fasttext.load_model(ModelPath)
     for keyword in KeywordList:
+        print(keyword)
         for word in mostwords:
+            print(word)
             result += cos_sim(Model.get_word_vector(keyword),Model.get_word_vector(word[0]))
+            print(result)
     return result / (len(KeywordList) * 5)
+
 
 def Sortcnt(WordCnt):
     return sorted(WordCnt.items(), key=operator.itemgetter(1))[-5:]
+
+
+class OktTokenizer:
+    okt = Okt()
+
+    def __call__(self, text):
+        tokens = self.okt.pos(text)
+        return tokens
+
+
+def Summary(URL):
+    ChkTxtFile(URL)
+    SubtitleFile = f'{YOUTUBE_REPO_PATH}/{ChkID(URL)}.ko.txt'
+    texts = open(SubtitleFile, 'r').read()
+    mytokenizer = OktTokenizer()
+
+    tokens = mytokenizer(texts)
+    textRank = TextRank(mytokenizer)
+
+    summerized = textRank.summarize(texts, 0.1)
+
+    return summerized
+
