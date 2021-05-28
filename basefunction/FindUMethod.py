@@ -14,6 +14,9 @@ from Summarization.textrankr2 import TextRank
 
 YOUTUBE_REPO_PATH = '/home/heesu/mount/NLP/script'  # mount/NLP/script'
 
+
+
+
 VttOption = {
     'skip_download': True,
     'writesubtitles': True,
@@ -230,7 +233,6 @@ def KorChk(word):
 
 
 def KeyWordNoun(keyword):
-    okt = Okt()
     KeywordResult = okt.nouns(keyword)
     return KeywordResult
 
@@ -269,7 +271,6 @@ def Sortcnt(WordCnt):
 
 class OktTokenizer:
     okt = Okt()
-
     def __call__(self, text):
         tokens = self.okt.pos(text)
         return tokens

@@ -1,8 +1,7 @@
 #from STT import load_model, stt
 from pprint import pprint as pp
-from basefunction.FindUMethod import *
-from basefunction.initial import json2list
-
+from basefunction import ctrl_f
+from wordembedding import association_f, load_model, cosin_similar, summary_script
 import os
 import json
 
@@ -10,24 +9,18 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 with open("test_scripts.json", "r") as st_json:
     json_file = json.load(st_json)
-script = json2list(json_file)
+# script = json2list(json_file)
 
 if __name__ == "__main__":
-    print(script)
-
     i = input("fucntion num:  2(ctrl+F), 3(reliability), 4(STT), 5(association), 6(summarization), 7(QA)")
 
-    if i == '1':
-        URL = input("URL:")
-        MakeFile(URL)
     if i == '2':
         SearchingValue = input("keyword:")
-        URL = input("URL:")
-        Ctrl_F(SearchingValue, URL)
+        ctrl_f(SearchingValue, json_file)
     if i == '3':
+        model = load_model()
         SearchingValue = input("keyword:")
-        URL = input("URL:")
-        CosinSimilar(SearchingValue, URL)
+        cosin_similar(SearchingValue, json_file, model)
     """
     if i == '4':
         # no db ins
@@ -41,10 +34,9 @@ if __name__ == "__main__":
         pp(sentences)
         """
     if i == '5':
+        model = load_model()
         SearchingValue = input("keyword:")
-        URL = input("URL:")
-        WordEm_crtlF(SearchingValue,URL)
+        association_f(SearchingValue, json_file, model)
 
     if i == '6':
-        URL = input("URL:")
-        Summary(URL)
+        summary_script(json_file)
