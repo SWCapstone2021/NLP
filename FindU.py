@@ -1,26 +1,29 @@
+import os
 import json
+from pprint import pprint as pp
 
+from basefunction import ctrl_f
+from wordembedding import association_f, load_wm_model, cosin_similar, summary_script
 from QA import load_qa_model, QA_system
 from STT import load_stt_model, stt
-from basefunction.FindUMethod import *
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 with open("test_scripts.json", "r") as st_json:
     json_file = json.load(st_json)
+# script = json2list(json_file)
 
 if __name__ == "__main__":
-    i = input("function num:  2(ctrl+F), 3(reliability), 4(STT), 5(association), 6(summarization), 7(QA)")
+    i = input("fucntion num:  1(ctrl+F), 2(reliability), 3(STT), 4(association), 5(summarization), 6(QA)")
+
+    if i == '1':
+        SearchingValue = input("keyword:")
+        ctrl_f(SearchingValue, json_file)
 
     if i == '2':
+        model = load_model()
         SearchingValue = input("keyword:")
-        URL = input("URL:")
-        Ctrl_F(SearchingValue, URL)
-
-    if i == '3':
-        SearchingValue = input("keyword:")
-        URL = input("URL:")
-        CosinSimilar(SearchingValue, URL)
+        cosin_similar(SearchingValue, json_file, model)
 
     if i == '4':
         print("Load model...", end='')
@@ -30,17 +33,15 @@ if __name__ == "__main__":
         audio_path = 'data/origin_audio/2YD2p24EKb4.wav'
 
         sentences = stt(stt_model, stt_vocab, audio_path)
-        # from pprint import pprint as pp
         # pp(sentences)
 
     if i == '5':
+        model = load_wm_model()
         SearchingValue = input("keyword:")
-        URL = input("URL:")
-        WordEm_crtlF(SearchingValue, URL)
+        association_f(SearchingValue, json_file, model)
 
     if i == '6':
-        URL = input("URL:")
-        Summary(URL)
+        summary_script(json_file)
 
     if i == '7':
         print("Load model...", end='')
@@ -49,5 +50,4 @@ if __name__ == "__main__":
 
         question = '개방적인 곳은?'
         answers = QA_system(qa_model, qa_tokenizer, question, json_file)
-        # from pprint import pprint as pp
         # pp(answers)
