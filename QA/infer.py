@@ -73,12 +73,19 @@ def evaluate(model, tokenizer, question, context):
     return answers
 
 
-def interest_of_test(predictions, threshold=0.7):
+def interest_of_test(predictions, threshold=0.7, top_count=5):
     answers = list()
-    for pred in predictions:
+    top_answer = list()
+
+    for i, pred in enumerate(predictions):
         text, prob, _, _ = pred.values()
+        if i < top_count:
+            top_answer.append(text)
         if float(prob) > threshold:
             answers.append(text)
+
+    if len(answers) == 0:
+        return top_answer
 
     return answers
 

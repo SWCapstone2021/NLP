@@ -10,8 +10,8 @@ from basefunction import json2list
 from infer import evaluate
 
 
-def load_model(model_path='models'):
-    device = torch.cuda.is_available()
+def load_qa_model(model_path='QA/models'):
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     model_class = BertForQuestionAnswering
     model = model_class.from_pretrained(model_path)
@@ -30,10 +30,13 @@ def QA_system(model, tokenizer, question, json_script):
     answers = evaluate(model, tokenizer, question, context)
 
     result = list()
-
+    prev_idx = None
     for answer in answers:
         for i, script in enumerate(scripts):
             if answer in script:
+                if i == prev_idx:
+                    continue
                 result.append((i, answer))
+                prev_idx = i
 
     return result

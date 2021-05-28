@@ -25,7 +25,7 @@ def stt(model, vocab, audio_path):
     return sentences
 
 
-def load_model(model_name='ds2'):
+def load_stt_model(model_name='ds2'):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     model = torch.load(os.path.join('STT/models', f"{model_name}.pt"), map_location=lambda storage, loc: storage).to(
