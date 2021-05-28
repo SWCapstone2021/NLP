@@ -11,19 +11,20 @@
 **찾아봐유**를 사용하기 위해서는 영상의 script가 필요하다. 하지만 유튜브에서는 script가 없는 영상이 많고 '자막 자동 생성 기능'이 있지만 한국어의 경우 제대로 자막 생성이 이루어지지 않아 ***
 한국어에 맞는 STT model을 제작***하여 사용하고자 한다.
 
-Dataset : AIHub
-
-Model : DeepSpeech2
-
-Period : Iteration 1~3
+|  |         |
+| ------- | ------------- |
+| Dataset | AIHub         |
+| Model   | DeepSpeech2   |
+| Period  | Iteration 1~3 |
+| Model path | 'STT/models/ds2.pt' |
 
 ```python
 from STT import load_model, stt
 
-model, vocab = load_model()  # model과 vocab은 처음 로드해놓고 계속 사용하기
+model, vocab = load_model()  # model과 vocab은 서버가 시작할 때 load
 audio_path = 'your/audio_path/origin_audio.wav'
 
-sentences = stt(model, vocab, audio_path)  # sentences는 list로 (시간, 자막)이 출력됨
+sentences = stt(model, vocab, audio_path)  # sentences는 list로 (시간, 자막)으로 구성
 >> sentences[0] = (3.2, "번역된 자막이 출력됩니다.")
 ```
 
