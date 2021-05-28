@@ -4,8 +4,8 @@ from pprint import pprint as pp
 
 from basefunction import ctrl_f
 from wordembedding import association_f, load_wm_model, cosin_similar, summary_script
-#from QA import load_qa_model, QA_system
-#from STT import load_stt_model, stt
+from QA import load_qa_model, QA_system
+from STT import load_stt_model, stt
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     if i == '1':
         SearchingValue = input("keyword:")
         timestamp = ctrl_f(SearchingValue, json_file)
-    
+
     if i == '2':
         model = load_wm_model()
         SearchingValue = input("keyword:")
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     if i == '5':
         summarized_text = summary_script(json_file)
         pp(summarized_text)
-"""
+
     if i == '6':
         print("Load model...", end='')
         qa_model, qa_tokenizer = load_qa_model()
@@ -52,4 +52,4 @@ if __name__ == "__main__":
         question = '개방적인 곳은?'
         answers = QA_system(qa_model, qa_tokenizer, question, json_file)
         # pp(answers)
-        """
+
