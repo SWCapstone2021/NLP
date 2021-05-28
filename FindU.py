@@ -1,13 +1,21 @@
 #from STT import load_model, stt
 from pprint import pprint as pp
 from basefunction.FindUMethod import *
+from basefunction.initial import json2list
 
 import os
+import json
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
+with open("test_scripts.json", "r") as st_json:
+    json_file = json.load(st_json)
+script = json2list(json_file)
+
 if __name__ == "__main__":
-    i = input("fucntion num: 1(extract subtitle), 2(ctrl+F), 3(Frequency), 4(Check stt performance), 5(word embedding)")
+    print(script)
+
+    i = input("fucntion num:  2(ctrl+F), 3(reliability), 4(STT), 5(association), 6(summarization), 7(QA)")
 
     if i == '1':
         URL = input("URL:")
