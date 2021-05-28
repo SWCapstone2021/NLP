@@ -19,7 +19,10 @@ if __name__ == "__main__":
     if i == '1':
         SearchingValue = input("keyword:")
         ctrl_f(SearchingValue, json_file)
+<<<<<<< HEAD
 
+=======
+>>>>>>> ea5b8ee27857b27f1d94bf7aa550c8c84e30034a
     if i == '2':
         model = load_model()
         SearchingValue = input("keyword:")

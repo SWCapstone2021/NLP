@@ -5,13 +5,14 @@ def json2list(json_file):
 
     return _list
 
-def ctrl_f(keyword,json_file):
-    TimeStamp=[]
+
+def ctrl_f(keyword, json_file):
+    TimeStamp = []
     for line in json_file:
         if keyword in line['text']:
             TimeStamp.append(line['time'])
-    
-    if len(TimeStamp)==0:
+
+    if len(TimeStamp) == 0:
         return None
-    
+
     return TimeStamp
