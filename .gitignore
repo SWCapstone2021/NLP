@@ -6,15 +6,14 @@ STT/ClovaCall/log/*
 script/*
 !STT/ClovaCall/data/*.py
 */*/nohup.out
-STT/data/audio
-STT/models
+STT/data/audioSTT/models
+STT/models/*
 .idea/
 data/*
 
 # textrank
 #Embedding
-wordembedding/*
-
+wordembedding/dataset/*
 #QA
 QA/runs/*
 QA/models/*
