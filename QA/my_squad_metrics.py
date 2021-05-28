@@ -21,7 +21,6 @@ probability that a question is unanswerable.
 """
 
 import collections
-import json
 import math
 import re
 import string
@@ -247,7 +246,7 @@ def squad_evaluate(examples, preds, no_answer_probs=None, no_answer_probability_
     return evaluation
 
 
-def get_final_text(pred_text, orig_text, do_lower_case, verbose_logging=False):
+def get_final_text(pred_text, orig_text, do_lower_case):
     """Project the tokenized prediction back to the original text."""
 
     # When we created the data, we kept track of the alignment between original
@@ -376,10 +375,9 @@ def compute_predictions_logits(
         n_best_size,
         max_answer_length,
         do_lower_case,
-        verbose_logging,
-        version_2_with_negative,
         null_score_diff_threshold,
         tokenizer,
+        version_2_with_negative=None,
 ):
     """Write final predictions to the json file and log-odds of null if needed."""
 
@@ -490,7 +488,7 @@ def compute_predictions_logits(
                 tok_text = " ".join(tok_text.split())
                 orig_text = " ".join(orig_tokens)
 
-                final_text = get_final_text(tok_text, orig_text, do_lower_case, verbose_logging)
+                final_text = get_final_text(tok_text, orig_text, do_lower_case)
                 if final_text in seen_predictions:
                     continue
 
@@ -536,18 +534,18 @@ def compute_predictions_logits(
             output["end_logit"] = entry.end_logit
             nbest_json.append(output)
 
-        assert len(nbest_json) >= 1, "No valid predictions"
+        # assert len(nbest_json) >= 1, "No valid predictions"
+        #
+        # if not version_2_with_negative:
+        #     all_predictions[example.qas_id] = nbest_json[0]["text"]
+        # else:
+        #     # predict "" iff the null score - the score of best non-null > threshold
+        #     score_diff = score_null - best_non_null_entry.start_logit - (best_non_null_entry.end_logit)
+        #     scores_diff_json[example.qas_id] = score_diff
+        #     if score_diff > null_score_diff_threshold:
+        #         all_predictions[example.qas_id] = ""
+        #     else:
+        #         all_predictions[example.qas_id] = best_non_null_entry.text
+        # all_nbest_json[example.qas_id] = nbest_json
 
-        if not version_2_with_negative:
-            all_predictions[example.qas_id] = nbest_json[0]["text"]
-        else:
-            # predict "" iff the null score - the score of best non-null > threshold
-            score_diff = score_null - best_non_null_entry.start_logit - (best_non_null_entry.end_logit)
-            scores_diff_json[example.qas_id] = score_diff
-            if score_diff > null_score_diff_threshold:
-                all_predictions[example.qas_id] = ""
-            else:
-                all_predictions[example.qas_id] = best_non_null_entry.text
-        all_nbest_json[example.qas_id] = nbest_json
-
-    return all_predictions
+    return nbest_json
