@@ -33,7 +33,6 @@ if __name__ == "__main__":
 
         sentences = stt(model, vocab, audio_path)
         # from pprint import pprint as pp
-        #
         # pp(sentences)
 
     if i == '5':
