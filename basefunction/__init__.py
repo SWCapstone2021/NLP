@@ -6,6 +6,14 @@ def json2list(json_file):
     return _list
 
 
+def list2json(idxs, json_file):
+    result = list()
+    for idx in idxs:
+        result.append(json_file[idx])
+
+    return result
+
+
 def ctrl_f(keyword, json_file):
     TimeStamp = []
     for line in json_file:
