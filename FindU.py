@@ -1,11 +1,12 @@
-import os
 import json
-from pprint import pprint as pp
+import os
 
-from basefunction import ctrl_f
-from wordembedding import association_f, load_wm_model, cosin_similar, summary_script
 from QA import load_qa_model, QA_system
 from STT import load_stt_model, stt
+from basefunction import ctrl_f
+from wordembedding import association_f, load_wm_model, summary_script, cosin_similar
+
+# from pprint import pprint as pp
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
@@ -18,12 +19,13 @@ if __name__ == "__main__":
 
     if i == '1':
         SearchingValue = input("keyword:")
-        timestamp = ctrl_f(SearchingValue, json_file)
+        result_script = ctrl_f(SearchingValue, json_file)
+        # pp(result_script[:5])
 
     if i == '2':
-        model = load_wm_model()
+        wm_model = load_wm_model()
         SearchingValue = input("keyword:")
-        score = cosin_similar(SearchingValue, json_file, model)
+        score = cosin_similar(SearchingValue, json_file, wm_model)
 
     if i == '3':
         print("Load model...", end='')
@@ -33,23 +35,23 @@ if __name__ == "__main__":
         audio_path = 'data/origin_audio/2YD2p24EKb4.wav'
 
         sentences = stt(stt_model, stt_vocab, audio_path)
-        # pp(sentences)
+        # pp(sentences[:5])
 
     if i == '4':
-        model = load_wm_model()
+        wm_model = load_wm_model()
         SearchingValue = input("keyword:")
-        timestamp = association_f(SearchingValue, json_file, model)
+        result_script = association_f(SearchingValue, json_file, wm_model)
+        # pp(result_script[:5])
 
     if i == '5':
-        summarized_text = summary_script(json_file)
-        pp(summarized_text)
+        result_script = summary_script(json_file)
+        # pp(result_script[:5])
 
     if i == '6':
         print("Load model...", end='')
         qa_model, qa_tokenizer = load_qa_model()
         print("done")
 
-        question = '개방적인 곳은?'
+        question = '이혼한 날'
         answers = QA_system(qa_model, qa_tokenizer, question, json_file)
-        # pp(answers)
-
+        # pp(answers[:5)

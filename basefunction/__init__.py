@@ -15,12 +15,9 @@ def list2json(idxs, json_file):
 
 
 def ctrl_f(keyword, json_file):
-    TimeStamp = []
+    result = list()
     for line in json_file:
         if keyword in line['text']:
-            TimeStamp.append(line['time'])
+            result.append(line)
 
-    if len(TimeStamp) == 0:
-        return None
-
-    return TimeStamp
+    return result
