@@ -32,11 +32,11 @@ def QA_system(model, tokenizer, question, json_script):
     result = list()
     prev_idx = None
     for answer in answers:
-        for i, script in enumerate(scripts):
-            if answer in script:
+        for i, script in enumerate(json_script):
+            if answer in script['text']:
                 if i == prev_idx:
                     continue
-                result.append((i, answer))
+                result.append(script)
                 prev_idx = i
 
     return result
