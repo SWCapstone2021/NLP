@@ -13,6 +13,18 @@ from kospeech.models import (
 )
 
 
+def to_json(sentences):
+    result = list()
+    for sentence in sentences:
+        _dict = {
+            "id": 0,
+            "time": sentence[0],
+            "text": sentence[1]
+        }
+        result.append(_dict)
+    return result
+
+
 def stt(model, vocab, audio_path):
     features, input_lengths, time_stamps = parse_audio(audio_path)
     sentences = list()
@@ -22,7 +34,7 @@ def stt(model, vocab, audio_path):
         sentence = vocab.label_to_string(y_hats.cpu().detach().numpy())
         sentences.append((time_stamp, sentence[0]))
 
-    return sentences
+    return to_json(sentences)
 
 
 def load_stt_model(model_name='ds2'):

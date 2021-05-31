@@ -55,7 +55,6 @@ class TextRank:
         # parse text
         sentences: List[Sentence] = parse_text_into_sentences(text, self.tokenizer)
         num_sentences = int(len(sentences) * ratio)
-        print(num_sentences)
         # build graph
         graph: Graph = build_sentence_graph(sentences, tolerance=self.tolerance)
 
