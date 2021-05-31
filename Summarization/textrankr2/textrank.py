@@ -42,7 +42,7 @@ class TextRank:
         self.tokenizer: Callable[[str], List[str]] = tokenizer
         self.tolerance: float = tolerance
 
-    def summarize(self, text: str, ratio=0.1, verbose: bool = True) -> Union[str, List[str]]:
+    def summarize(self, text: str, ratio=0.05, verbose: bool = True) -> Union[str, List[str]]:
         """
             Summarizes the given text, using TextRank algorithm.
 

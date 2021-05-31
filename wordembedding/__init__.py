@@ -45,13 +45,14 @@ def summary_script(json_file):
     my_tokenizer = okt_tokenizer()
     textRank = TextRank(my_tokenizer)
 
-    summerized = textRank.summarize(texts, 0.1)
+    summarized = textRank.summarize(texts)
 
     result = list()
-    for summerize_line in summerized:
+    for summarize_line in summarized:
         for line in json_file:
-            if summerize_line == line["text"]:
+            if summarize_line == line["text"]:
                 result.append(line)
                 break
 
     return result
+    

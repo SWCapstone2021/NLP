@@ -1,12 +1,12 @@
 import json
 import os
 
-from QA import load_qa_model, QA_system
-from STT import load_stt_model, stt
+#from QA import load_qa_model, QA_system
+#from STT import load_stt_model, stt
 from basefunction import ctrl_f
 from wordembedding import association_f, load_wm_model, summary_script, cosin_similar
 
-# from pprint import pprint as pp
+from pprint import pprint as pp
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
@@ -26,7 +26,7 @@ if __name__ == "__main__":
         wm_model = load_wm_model()
         SearchingValue = input("keyword:")
         score = cosin_similar(SearchingValue, json_file, wm_model)
- 
+    """
     if i == '3':
         print("Load model...", end='')
         stt_model, stt_vocab = load_stt_model()
@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
         sentences = stt(stt_model, stt_vocab, audio_path)
         # pp(sentences[:5])
-
+    """
     if i == '4':
         wm_model = load_wm_model()
         SearchingValue = input("keyword:")
@@ -45,9 +45,9 @@ if __name__ == "__main__":
 
     if i == '5':
         result_script = summary_script(json_file)
-        # pp(result_script[:5])
+        pp(result_script)#[:5])
 
-
+    """
     if i == '6':
         print("Load model...", end='')
         qa_model, qa_tokenizer = load_qa_model()
@@ -56,4 +56,5 @@ if __name__ == "__main__":
         question = '이혼한 날'
         answers = QA_system(qa_model, qa_tokenizer, question, json_file)
         # pp(answers[:5)
-
+    
+    """
