@@ -40,8 +40,14 @@ def wordem_chk(chkword, wordset):
 def cos_sim(word1, word2):
     return dot(word1, word2)/ (norm(word1) * norm(word2))
 
+def title_noun(title):
+    okt = Okt()
+    titleset = okt.nouns(title)
 
+    return titleset
+    
 def script_noun(json_file):
+    script = script_list2str(json_file)
     okt = Okt()
     NounResult = okt.nouns(script)
 
