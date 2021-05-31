@@ -44,6 +44,7 @@ if __name__ == "__main__":
         summarized_text = summary_script(json_file)
         pp(summarized_text)
 
+
     if i == '6':
         print("Load model...", end='')
         qa_model, qa_tokenizer = load_qa_model()
@@ -52,4 +53,5 @@ if __name__ == "__main__":
         question = '개방적인 곳은?'
         answers = QA_system(qa_model, qa_tokenizer, question, json_file)
         # pp(answers)
+
 
