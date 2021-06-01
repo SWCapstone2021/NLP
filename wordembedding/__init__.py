@@ -29,14 +29,15 @@ def load_wm_model():
 def cosin_similar(title, json_file, model):
     only_script_noun = script_noun(json_file)
     only_title_noun = title_noun(title)
-    script_mostwords=word_count(only_script_noun)
+    
+    title_noun_set = word_set(only_title_noun)
 
     result = 0
-    for keyword in only_title_noun:
-        for word in script_mostwords:
-            result += cos_sim(model.get_word_vector(keyword),model.get_word_vector(word[0]))
+    for keyword in title_noun_set:        
+        for word in only_script_noun:
+            result += cos_sim(model.get_word_vector(keyword), model.get_word_vector(word))
 
-    return result / (len(only_title_noun) * len(script_mostwords)) 
+    return result / (len(title_noun_set) * len(only_script_noun)) 
 
 
 def summary_script(json_file):

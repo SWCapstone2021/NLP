@@ -1,7 +1,6 @@
 import re
 from konlpy.tag import Okt
 from basefunction import json2list
-import operator
 from numpy import dot
 from numpy.linalg import norm
 import kss
@@ -36,15 +35,17 @@ def wordem_chk(chkword, wordset):
     
     return wordset
 
-
 def cos_sim(word1, word2):
-    return dot(word1, word2)/ (norm(word1) * norm(word2))
+    if (norm(word1) * norm(word2)) == 0.0:
+        return 0
+    return dot(word1, word2) / (norm(word1) * norm(word2))
+
 
 def title_noun(title):
     okt = Okt()
-    titleset = okt.nouns(title)
+    title_set = okt.nouns(title)
 
-    return titleset
+    return title_set
     
 def script_noun(json_file):
     script = script_list2str(json_file)
@@ -58,23 +59,12 @@ def script_list2str(json_file):
     script_text = ''.join(scriptfile)
     return script_text
 
-
-def word_count(noun_set):
-    wordcnt={}
-    cnt=0
+def word_set(noun_set):
+    word_list=list()
     for word in noun_set:
-        if word in wordcnt:
-            cnt = wordcnt[word]
-            wordcnt[word]= cnt+1
-        else:
-            wordcnt[word]=1
-    mostwords = sort_cnt(wordcnt)
-    return mostwords
-
-
-def sort_cnt(word_count):
-    return sorted(word_count.items(), key=operator.itemgetter(1))[-5:]
-
+        if word not in word_list:
+            word_list.append(word)
+    return word_list
 
 def split_sentence(json_file):
     script = json2list(json_file)
