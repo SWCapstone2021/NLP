@@ -4,6 +4,7 @@ import pickle
 import time
 import urllib
 from urllib.parse import urlparse
+from pororo import Pororo
 
 from youtube_transcript_api import YouTubeTranscriptApi
 
@@ -63,13 +64,16 @@ class Example:
 def load_models():
     wm_model = load_wm_model()
     qa_model, qa_tokenizer = load_qa_model()
-    return [wm_model, qa_model, qa_tokenizer]
+    summ_model = Pororo(task="text_summarization", lang="ko", model="extractive")
+    
+    return [wm_model, qa_model, qa_tokenizer,summ_model]
 
 
 if __name__ == "__main__":
-    wm_model, qa_model, qa_tokenizer = load_models()
-
+    qa_model, qa_tokenizer = load_models()
+    summ_model = load_models()
     ids = ['R_Llt7SnSFA', 'bGBfCrQgZd0', '3snbJdQmTwA', 'c7tEAx2TL2k', 'J9CF-vj5GZU']
+    
     questions = [
         ['성능이 얼마나 개선되었나?', '펜슬 호환성은 좋은가?'],
         ['등과 땅이 모두 붙어야 하나요?', 'leg raise를 하면 허리가 아플 수 있나요?'],
@@ -77,29 +81,27 @@ if __name__ == "__main__":
         ['지네딘 지단이 나오는 영화는?', '킹 아서: 제왕의 검에 출연하는 선수는?'],
         ['오케스트라 입장객 수는?', '세중문화회관 개관 날짜는?']
     ]
-
-    examples = list(map(lambda x, y: Example(x, y), ids, questions))
+    
+    examples = list(map(lambda x: Example(x), ids, questions))
 
     start = time.time()
     for e in examples:
         e.score = cosin_similar(e.title, e.script, wm_model)
-        e.summary = summary_script(e.script)
-
+        e.summary = summary_script(e.script,summ_model)
+        
         for q in e.questions:
             answer = QA_system(qa_model, qa_tokenizer, q, e.script)
             e.answers.append(answer)
-
+        
     print(f"running time: {time.time() - start}")
 
-    with open('examples_pickle.pkl', 'wb') as f:
-        pickle.dump(examples, f)
 
     for e in examples:
         print('=' * 10)
         print(f'https://www.youtube.com/watch?v={e.id}')
         print(e.title)
         print(e.score)
-        print('summary: ', list(map(lambda x: x['text'], e.summary)))
+        print('summary: ', e.summary)
         print(e.questions[0])
         print(list(map(lambda x: x['text'], e.answers[0])))
         print(e.questions[1])

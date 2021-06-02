@@ -4,7 +4,6 @@ from basefunction import json2list
 from numpy import dot
 from numpy.linalg import norm
 import kss
-from Summarization.textrankr2 import TextRank
 
 def word_embedding(keyword, model):
     wordset=[]
@@ -71,13 +70,7 @@ def split_sentence(json_file):
     sentence_text= ''
     for line in script:
         for sent in kss.split_sentences(line):
-            sent = sent + '\n'
+            sent = sent + ' '
             sentence_text += sent
     return sentence_text
 
-
-class okt_tokenizer:
-    okt = Okt()
-    def __call__(self, text):
-        tokens = self.okt.pos(text)
-        return tokens
