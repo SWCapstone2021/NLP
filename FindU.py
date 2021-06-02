@@ -47,8 +47,8 @@ if __name__ == "__main__":
 
     if i == '5':
         summ_model = Pororo(task="text_summarization", lang="ko", model="extractive")
-        result_script = summary_script(json_file, summ_model)
-        #pp(result_script)
+        summ_script = summary_script(json_file, summ_model)
+        #pp(summ_script)
 
     if i == '6':
         print("Load model...", end='')
