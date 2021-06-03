@@ -65,8 +65,8 @@ def load_models():
     qa_model, qa_tokenizer = load_qa_model()
     summ_model = load_summ_model()
     sc_model = load_sc_model()
-    
-    return [wm_model, qa_model, qa_tokenizer,summ_model,load_sc_model]
+
+    return [wm_model, qa_model, qa_tokenizer, summ_model, sc_model]
 
 
 if __name__ == "__main__":
