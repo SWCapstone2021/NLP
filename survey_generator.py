@@ -64,12 +64,13 @@ def load_models():
     wm_model = load_wm_model()
     qa_model, qa_tokenizer = load_qa_model()
     summ_model = load_summ_model()
-
-    return [wm_model, qa_model, qa_tokenizer, summ_model]
+    sc_model = load_sc_model()
+    
+    return [wm_model, qa_model, qa_tokenizer,summ_model,load_sc_model]
 
 
 if __name__ == "__main__":
-    wm_model, qa_model, qa_tokenizer, summ_model = load_models()
+    wm_model, qa_model, qa_tokenizer, summ_model, sc_model = load_models()
 
     ids = ['R_Llt7SnSFA', 'bGBfCrQgZd0', '3snbJdQmTwA', 'c7tEAx2TL2k', 'J9CF-vj5GZU', '4puc2Ox9_vc']
 
@@ -86,7 +87,7 @@ if __name__ == "__main__":
 
     start = time.time()
     for e in examples:
-        e.score = cosin_similar(e.title, e.script, wm_model)
+        e.score = cosin_similar(e.title, e.script, sc_model)
         e.summary = summary_script(e.script, summ_model)
 
         for q in e.questions:

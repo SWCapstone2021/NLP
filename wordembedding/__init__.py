@@ -1,8 +1,5 @@
 from operator import itemgetter
-
-import fasttext
-import fasttext.util
-
+from pororo import Pororo
 from basefunction import ctrl_f
 from wordembedding.utils import *
 
@@ -20,24 +17,24 @@ def association_f(keyword, json_file, model):
 
 
 def load_wm_model():
-    modelPath = 'wordembedding/dataset/cc.ko.300.bin'
-    model = fasttext.load_model(modelPath)
-
+    model = Pororo("word2vec", lang="ko")
     return model
 
+def load_sc_model():
+    model = Pororo(task="sentence_embedding", lang="ko")
+    return model
+
+def load_summ_model():
+    model = Pororo(task="text_summarization", lang="ko", model="extractive")
+    return model
 
 def cosin_similar(title, json_file, model):
-    only_script_noun = script_noun(json_file)
-    only_title_noun = title_noun(title)
+    word1 = model(title)
+    script = script_list2str(json_file)
+    word2 = model(script)
 
-    title_noun_set = word_set(only_title_noun)
-
-    result = 0
-    for keyword in title_noun_set:
-        for word in only_script_noun:
-            result += cos_sim(model.get_word_vector(keyword), model.get_word_vector(word))
-
-    return result / (len(title_noun_set) * len(only_script_noun))
+    result = cos_sim(word1, word2)
+    return result
 
 
 def summary_script(json_file, summ_model):

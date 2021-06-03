@@ -5,18 +5,6 @@ from numpy import dot
 from numpy.linalg import norm
 import kss
 
-"""
-def word_embedding(keyword, model):
-    wordset=[]
-    for similiarity, word in model.get_nearest_neighbors(keyword,20):
-        #print(f'{word}:{similiarity}')
-        if keyword not in word:
-            if kor_chk(word) :
-                wordset = wordem_chk(word,wordset)
-                if len(wordset)==5:
-                    return wordset
-    return wordset
-"""
 def word_embedding(keyword, model):
     wordset = []
     association_word = model.find_similar_words(keyword)
@@ -49,8 +37,6 @@ def wordem_chk(keyword, chkword, wordset):
 
 
 def cos_sim(word1, word2):
-    if (norm(word1) * norm(word2)) == 0.0:
-        return 0
     return dot(word1, word2) / (norm(word1) * norm(word2))
 
 
@@ -64,6 +50,7 @@ def script_noun(json_file):
     script = script_list2str(json_file)
     okt = Okt()
     NounResult = okt.nouns(script)
+    NounResult = Counter(NounResult)
 
     return NounResult
 
