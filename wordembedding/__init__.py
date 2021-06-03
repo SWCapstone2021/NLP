@@ -1,4 +1,5 @@
 from operator import itemgetter
+from pororo import Pororo
 
 import fasttext
 import fasttext.util
@@ -40,20 +41,11 @@ def cosin_similar(title, json_file, model):
     return result / (len(title_noun_set) * len(only_script_noun)) 
 
 
-def summary_script(json_file):
+def summary_script(json_file, summ_model):
     texts = split_sentence(json_file)
-
-    my_tokenizer = okt_tokenizer()
-    textRank = TextRank(my_tokenizer)
-
-    summarized = textRank.summarize(texts)
-
-    result = list()
-    for summarize_line in summarized:
-        for line in json_file:
-            if summarize_line == line["text"]:
-                result.append(line)
-                break
-
+    result = summ_model(texts)
+    
     return result
+
+
     
