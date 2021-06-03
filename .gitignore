@@ -19,6 +19,8 @@ QA/runs/*
 QA/models/*
 QA/models_origin/*
 QA/data/*
+QA/models_v1.0/*
+
 
 # Byte-compiled / optimized / DLL files
 
