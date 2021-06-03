@@ -12,7 +12,7 @@ def association_f(keyword, json_file, model):
             if word in line['text']:
                 TimeStamp.append(line)
 
-    TimeStamp = sorted(TimeStamp, key=itemgetter('time'))
+    TimeStamp = sorted(TimeStamp, key=itemgetter('start'))
     return TimeStamp
 
 
@@ -34,11 +34,4 @@ def cosin_similar(title, json_file, model):
     word2 = model(script)
 
     result = cos_sim(word1, word2)
-    return result
-
-
-def summary_script(json_file, summ_model):
-    texts = split_sentence(json_file)
-    result = summ_model(texts)
-
     return result

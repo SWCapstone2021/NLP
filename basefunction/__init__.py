@@ -15,9 +15,11 @@ def list2json(idxs, json_file):
 
 
 def ctrl_f(keyword, json_file):
+    keyword_list = keyword.split(' ')
     result = list()
-    for line in json_file:
-        if keyword in line['text']:
-            result.append(line)
+    for word in keyword_list:
+        for line in json_file:
+            if word in line['text']:
+                result.append(line)
 
     return result

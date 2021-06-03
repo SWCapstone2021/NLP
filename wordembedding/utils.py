@@ -6,12 +6,14 @@ from numpy.linalg import norm
 import kss
 
 def word_embedding(keyword, model):
+    keyword_list = keyword.split(' ')
     wordset = []
-    association_word = model.find_similar_words(keyword)
-    for words in association_word.values():
-        for word in words:
-            word = word.split(' (')[0]
-            wordset = wordem_chk(keyword, word, wordset)
+    for searching_word in keyword_list:
+        association_word = model.find_similar_words(searching_word)
+        for words in association_word.values():
+            for word in words:
+                word = word.split(' (')[0]
+                wordset = wordem_chk(searching_word, word, wordset)
     return set(wordset)
 
 
@@ -27,13 +29,11 @@ def wordem_chk(keyword, chkword, wordset):
     if '분류:' in chkword:
         return wordset
 
-    if len(wordset) == 0:
-        wordset.append(chkword)
-        return wordset
-    
     if kor_chk(chkword) :
         wordset.append(chkword)
         return wordset
+
+    return wordset
 
 
 def cos_sim(word1, word2):
@@ -50,7 +50,6 @@ def script_noun(json_file):
     script = script_list2str(json_file)
     okt = Okt()
     NounResult = okt.nouns(script)
-    NounResult = Counter(NounResult)
 
     return NounResult
 
