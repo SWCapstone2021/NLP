@@ -65,36 +65,36 @@ def load_models():
     wm_model = load_wm_model()
     qa_model, qa_tokenizer = load_qa_model()
     summ_model = Pororo(task="text_summarization", lang="ko", model="extractive")
-    
-    return [wm_model, qa_model, qa_tokenizer,summ_model]
+
+    return [wm_model, qa_model, qa_tokenizer, summ_model]
 
 
 if __name__ == "__main__":
-    qa_model, qa_tokenizer = load_models()
-    summ_model = load_models()
-    ids = ['R_Llt7SnSFA', 'bGBfCrQgZd0', '3snbJdQmTwA', 'c7tEAx2TL2k', 'J9CF-vj5GZU']
-    
+    wm_model, qa_model, qa_tokenizer, summ_model = load_models()
+
+    ids = ['R_Llt7SnSFA', 'bGBfCrQgZd0', '3snbJdQmTwA', 'c7tEAx2TL2k', 'J9CF-vj5GZU', '4puc2Ox9_vc']
+
     questions = [
         ['성능이 얼마나 개선되었나?', '펜슬 호환성은 좋은가?'],
         ['등과 땅이 모두 붙어야 하나요?', 'leg raise를 하면 허리가 아플 수 있나요?'],
         ['사건이 일어난 날짜는?', '마스크를 안쓴 사람은?'],
         ['지네딘 지단이 나오는 영화는?', '킹 아서: 제왕의 검에 출연하는 선수는?'],
-        ['오케스트라 입장객 수는?', '세중문화회관 개관 날짜는?']
+        ['오케스트라 입장객 수는?', '세중문화회관 개관 날짜는?'],
+        ['얀센 백신의 장점은?', '얀센 백신은 몇 명분?']
     ]
-    
-    examples = list(map(lambda x: Example(x), ids, questions))
+
+    examples = list(map(lambda x, y: Example(x, y), ids, questions))
 
     start = time.time()
     for e in examples:
         e.score = cosin_similar(e.title, e.script, wm_model)
-        e.summary = summary_script(e.script,summ_model)
-        
+        e.summary = summary_script(e.script, summ_model)
+
         for q in e.questions:
             answer = QA_system(qa_model, qa_tokenizer, q, e.script)
             e.answers.append(answer)
-        
-    print(f"running time: {time.time() - start}")
 
+    print(f"running time: {time.time() - start}")
 
     for e in examples:
         print('=' * 10)
