@@ -5,6 +5,7 @@ from numpy import dot
 from numpy.linalg import norm
 import kss
 
+"""
 def word_embedding(keyword, model):
     wordset=[]
     for similiarity, word in model.get_nearest_neighbors(keyword,20):
@@ -15,6 +16,15 @@ def word_embedding(keyword, model):
                 if len(wordset)==5:
                     return wordset
     return wordset
+"""
+def word_embedding(keyword, model):
+    wordset = []
+    association_word = model.find_similar_words(keyword)
+    for words in association_word.values():
+        for word in words:
+            word = word.split(' (')[0]
+            wordset = wordem_chk(keyword, word, wordset)
+    return set(wordset)
 
 
 def kor_chk(word):
@@ -22,17 +32,21 @@ def kor_chk(word):
     return len(hangul)
 
 
-def wordem_chk(chkword, wordset):
+def wordem_chk(keyword, chkword, wordset):
+    if keyword == chkword:
+        return wordset
+
+    if '분류:' in chkword:
+        return wordset
+
     if len(wordset) == 0:
         wordset.append(chkword)
         return wordset
-
-    for word in wordset:
-        if word not in chkword:
-            wordset.append(chkword)
-            return wordset
     
-    return wordset
+    if kor_chk(chkword) :
+        wordset.append(chkword)
+        return wordset
+
 
 def cos_sim(word1, word2):
     if (norm(word1) * norm(word2)) == 0.0:
