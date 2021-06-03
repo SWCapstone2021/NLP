@@ -1,6 +1,7 @@
 from operator import itemgetter
-from pororo import Pororo
+
 from basefunction import ctrl_f
+from pororo import Pororo
 from wordembedding.utils import *
 
 
@@ -20,13 +21,11 @@ def load_wm_model():
     model = Pororo("word2vec", lang="ko")
     return model
 
+
 def load_sc_model():
     model = Pororo(task="sentence_embedding", lang="ko")
     return model
 
-def load_summ_model():
-    model = Pororo(task="text_summarization", lang="ko", model="extractive")
-    return model
 
 def cosin_similar(title, json_file, model):
     word1 = model(title)
