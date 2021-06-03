@@ -8,6 +8,7 @@ from transformers import BertForQuestionAnswering, BertTokenizer
 
 from basefunction import json2list
 from infer import evaluate
+from wordembedding.utils import split_sentence
 
 
 def load_qa_model(model_path='QA/models'):
@@ -24,8 +25,7 @@ def load_qa_model(model_path='QA/models'):
 
 
 def QA_system(model, tokenizer, question, json_script):
-    scripts = json2list(json_script)
-    context = ' '.join(scripts)
+    context = split_sentence(json_script)
 
     answers = evaluate(model, tokenizer, question, context)
 
