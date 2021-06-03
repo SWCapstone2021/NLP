@@ -40,8 +40,5 @@ def cosin_similar(title, json_file, model):
 def summary_script(json_file, summ_model):
     texts = split_sentence(json_file)
     result = summ_model(texts)
-    
+
     return result
-
-
-    

@@ -3,11 +3,10 @@ import os
 
 from QA import load_qa_model, QA_system
 from STT import load_stt_model, stt
-from basefunction import ctrl_f
-from wordembedding import load_wm_model, cosin_similar,association_f, summary_script, load_summ_model, load_sc_model
-from pororo import Pororo
-from youtube_transcript_api import YouTubeTranscriptApi
-#from pprint import pprint as pp
+from Summarization import load_summ_model
+from wordembedding import *
+
+# from pprint import pprint as pp
 
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
@@ -37,7 +36,7 @@ if __name__ == "__main__":
         SearchingValue = input("keyword:")
         score = cosin_similar(SearchingValue, json_file, sc_model)
         print(score)
-    
+
     if i == '3':
         print("Load model...", end='')
         stt_model, stt_vocab = load_stt_model()
@@ -57,8 +56,8 @@ if __name__ == "__main__":
     if i == '5':
         summ_model = load_summ_model()
         summ_script = summary_script(json_file, summ_model)
-        pp(summ_script)
-    
+        # pp(summ_script)
+
     if i == '6':
         print("Load model...", end='')
         qa_model, qa_tokenizer = load_qa_model()
