@@ -1,3 +1,5 @@
+from operator import itemgetter
+
 def json2list(json_file):
     _list = list()
     for line in json_file:
@@ -17,9 +19,12 @@ def list2json(idxs, json_file):
 def ctrl_f(keyword, json_file):
     keyword_list = keyword.split(' ')
     result = list()
+    time = list()
     for word in keyword_list:
         for line in json_file:
             if word in line['text']:
-                result.append(line)
-
+                if line['start'] not in time:
+                    result.append(line)
+                    time.append(line['start'])
+    result = sorted(result, key=itemgetter('start'))
     return result
