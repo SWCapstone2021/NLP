@@ -1,14 +1,13 @@
 import json
 import os
-import pickle
 import time
 import urllib
 from urllib.parse import urlparse
-from pororo import Pororo
 
 from youtube_transcript_api import YouTubeTranscriptApi
 
 from QA import load_qa_model, QA_system
+from Summarization import load_summ_model
 from wordembedding import *
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
@@ -65,7 +64,7 @@ def load_models():
     wm_model = load_wm_model()
     qa_model, qa_tokenizer = load_qa_model()
     summ_model = load_summ_model()
-    
+
     return [wm_model, qa_model, qa_tokenizer, summ_model]
 
 
