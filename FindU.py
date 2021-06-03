@@ -4,7 +4,7 @@ import os
 from QA import load_qa_model, QA_system
 from STT import load_stt_model, stt
 from basefunction import ctrl_f
-from wordembedding import association_f, load_wm_model, summary_script, cosin_similar
+from wordembedding import *
 from pororo import Pororo
 
 #from pprint import pprint as pp
@@ -46,7 +46,7 @@ if __name__ == "__main__":
         # pp(result_script[:5])
 
     if i == '5':
-        summ_model = Pororo(task="text_summarization", lang="ko", model="extractive")
+        summ_model = load_summ_model()
         summ_script = summary_script(json_file, summ_model)
         #pp(summ_script)
 

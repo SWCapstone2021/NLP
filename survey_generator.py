@@ -9,7 +9,7 @@ from pororo import Pororo
 from youtube_transcript_api import YouTubeTranscriptApi
 
 from QA import load_qa_model, QA_system
-from wordembedding import load_wm_model, cosin_similar, summary_script
+from wordembedding import *
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
@@ -64,8 +64,8 @@ class Example:
 def load_models():
     wm_model = load_wm_model()
     qa_model, qa_tokenizer = load_qa_model()
-    summ_model = Pororo(task="text_summarization", lang="ko", model="extractive")
-
+    summ_model = load_summ_model()
+    
     return [wm_model, qa_model, qa_tokenizer, summ_model]
 
 
