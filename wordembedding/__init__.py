@@ -1,5 +1,4 @@
 from operator import itemgetter
-from pororo import Pororo
 
 import fasttext
 import fasttext.util
@@ -30,22 +29,19 @@ def load_wm_model():
 def cosin_similar(title, json_file, model):
     only_script_noun = script_noun(json_file)
     only_title_noun = title_noun(title)
-    
+
     title_noun_set = word_set(only_title_noun)
 
     result = 0
-    for keyword in title_noun_set:        
+    for keyword in title_noun_set:
         for word in only_script_noun:
             result += cos_sim(model.get_word_vector(keyword), model.get_word_vector(word))
 
-    return result / (len(title_noun_set) * len(only_script_noun)) 
+    return result / (len(title_noun_set) * len(only_script_noun))
 
 
 def summary_script(json_file, summ_model):
     texts = split_sentence(json_file)
     result = summ_model(texts)
-    
+
     return result
-
-
-    

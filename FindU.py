@@ -3,11 +3,10 @@ import os
 
 from QA import load_qa_model, QA_system
 from STT import load_stt_model, stt
-from basefunction import ctrl_f
+from Summarization import load_summ_model
 from wordembedding import *
-from pororo import Pororo
 
-#from pprint import pprint as pp
+# from pprint import pprint as pp
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
@@ -28,7 +27,7 @@ if __name__ == "__main__":
         SearchingValue = input("keyword:")
         score = cosin_similar(SearchingValue, json_file, wm_model)
         print(score)
-    
+
     if i == '3':
         print("Load model...", end='')
         stt_model, stt_vocab = load_stt_model()
@@ -48,7 +47,7 @@ if __name__ == "__main__":
     if i == '5':
         summ_model = load_summ_model()
         summ_script = summary_script(json_file, summ_model)
-        #pp(summ_script)
+        # pp(summ_script)
 
     if i == '6':
         print("Load model...", end='')
