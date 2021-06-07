@@ -95,11 +95,11 @@ answers = QA_system(qa_model, qa_tokenizer, question, json_script)  # answers는
 전체 스크립트의 3줄정도 분량을 요약해서 보여준다.
 
 ```python
-from wordembedding import summary_script
+from Summarization import load_sc_model, summary_script
 from pororo import Pororo
 
-summ_model = Pororo(task="text_summarization", lang="ko", model="extractive")
-summ_script = summary_script(json_file, summ_model)
+summ_model = load_sc_model()
+summarized_texts = summary_script(json_file, summ_model)
 >>> ["text", "text", "text"]
 ```
 ## Contributor

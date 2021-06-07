@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from youtube_transcript_api import YouTubeTranscriptApi
 
 from QA import load_qa_model, QA_system
-from Summarization import load_summ_model
+from Summarization import load_sc_model, summary_script
 from wordembedding import *
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"

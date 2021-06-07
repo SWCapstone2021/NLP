@@ -4,10 +4,10 @@ from youtube_transcript_api import YouTubeTranscriptApi
 
 from QA import load_qa_model, QA_system
 from STT import load_stt_model, stt
-from Summarization import load_summ_model
+from Summarization import load_summ_model, summary_script
 from wordembedding import *
-
-# from pprint import pprint as pp
+from youtube_transcript_api import YouTubeTranscriptApi
+from pprint import pprint as pp
 
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
@@ -27,19 +27,32 @@ def download_script(id):
 if __name__ == "__main__":
     i = input("fucntion num:  1(ctrl+F), 2(reliability), 3(STT), 4(association), 5(summarization), 6(QA)")
 
+<<<<<<< HEAD
+    json_file=download_script('4puc2Ox9_vc')
+=======
     json_file = download_script('R_Llt7SnSFA')
+>>>>>>> 0c84ae153fcab4c308b200fbc9d7d36855098308
 
     if i == '1':
         SearchingValue = input("keyword:")
         result_script = ctrl_f(SearchingValue, json_file)
+<<<<<<< HEAD
+        #pp(result_script)
+=======
         # pp(result_script[:5])
+>>>>>>> 0c84ae153fcab4c308b200fbc9d7d36855098308
 
     if i == '2':
         sc_model = load_sc_model()
         SearchingValue = input("keyword:")
         score = cosin_similar(SearchingValue, json_file, sc_model)
+<<<<<<< HEAD
+        #print(score)
+    """
+=======
         # print(score)
 
+>>>>>>> 0c84ae153fcab4c308b200fbc9d7d36855098308
     if i == '3':
         print("Load model...", end='')
         stt_model, stt_vocab = load_stt_model()
@@ -49,18 +62,26 @@ if __name__ == "__main__":
 
         sentences = stt(stt_model, stt_vocab, audio_path)
         # pp(sentences[:5])
+<<<<<<< HEAD
+    """
+=======
 
+>>>>>>> 0c84ae153fcab4c308b200fbc9d7d36855098308
     if i == '4':
         wm_model = load_wm_model()
         SearchingValue = input("keyword:")
         result_script = association_f(SearchingValue, json_file, wm_model)
+<<<<<<< HEAD
+        #pp(result_script)
+=======
         # pp(result_script)
+>>>>>>> 0c84ae153fcab4c308b200fbc9d7d36855098308
 
     if i == '5':
         summ_model = load_summ_model()
         summ_script = summary_script(json_file, summ_model)
         # pp(summ_script)
-
+    """
     if i == '6':
         print("Load model...", end='')
         qa_model, qa_tokenizer = load_qa_model()
@@ -69,3 +90,7 @@ if __name__ == "__main__":
         question = '이혼한 날'
         answers = QA_system(qa_model, qa_tokenizer, question, json_file)
         # pp(answers[:5)
+<<<<<<< HEAD
+    """
+=======
+>>>>>>> 0c84ae153fcab4c308b200fbc9d7d36855098308
