@@ -37,4 +37,5 @@ def cosin_similar(title, json_file, model):
     word2 = model(script)
 
     result = cos_sim(word1, word2)
+    result = int(result * 10)
     return result
