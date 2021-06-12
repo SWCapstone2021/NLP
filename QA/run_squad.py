@@ -26,7 +26,6 @@ import warnings
 import numpy as np
 import torch
 from evaluate_v1_0 import eval_during_train
-from tokenization_kobert import KoBertTokenizer
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from torch.utils.data.distributed import DistributedSampler
 from torch.utils.tensorboard import SummaryWriter

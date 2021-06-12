@@ -6,7 +6,6 @@ sys.path.append((os.path.dirname(__file__)))
 import torch
 from transformers import BertForQuestionAnswering, BertTokenizer
 
-from basefunction import json2list
 from infer import evaluate
 from wordembedding.utils import split_sentence
 
