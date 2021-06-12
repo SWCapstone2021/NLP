@@ -23,7 +23,7 @@ QA/models_v1.0/*
 
 
 # Byte-compiled / optimized / DLL files
-
+.coverage
 __pycache__/
 *.py[cod]
 *$py.class
