@@ -10,7 +10,7 @@ on:
       - dev
 
 jobs:
-  build:
+  pytest:
     runs-on: ubuntu-latest
     
     strategy:
