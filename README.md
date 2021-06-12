@@ -1,4 +1,5 @@
 # FindU NLP
+test
 
 이 프로젝트는 2021 Ajou University Spring SW capstone design 과목의 일환으로 진행되었습니다.
 
