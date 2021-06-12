@@ -29,3 +29,4 @@ beautifulsoup4
 sentence_transformers
 youtube_transcript_api
 opencv-python
+marisa_trie
