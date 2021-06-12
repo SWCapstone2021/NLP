@@ -1,7 +1,8 @@
+from operator import itemgetter
+
 from basefunction import ctrl_f
 from pororo import Pororo
 from wordembedding.utils import *
-from operator import itemgetter
 
 
 def association_f(keyword, json_file, model):
@@ -14,12 +15,13 @@ def association_f(keyword, json_file, model):
     for word in wordset:
         for line in json_file:
             if word in line['text']:
-               if line['start'] not in time:
+                if line['start'] not in time:
                     TimeStamp.append(line)
                     time.append(line['start'])
 
     TimeStamp = sorted(TimeStamp, key=itemgetter('start'))
     return TimeStamp
+
 
 def load_wm_model():
     model = Pororo("word2vec", lang="ko")

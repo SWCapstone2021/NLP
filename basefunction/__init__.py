@@ -1,5 +1,6 @@
 from operator import itemgetter
 
+
 def json2list(json_file):
     _list = list()
     for line in json_file:

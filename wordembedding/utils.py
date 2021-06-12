@@ -1,9 +1,12 @@
 import re
+
+import kss
 from konlpy.tag import Okt
-from basefunction import json2list
 from numpy import dot
 from numpy.linalg import norm
-import kss
+
+from basefunction import json2list
+
 
 def word_embedding(keyword, model):
     keyword_list = keyword.split(' ')
@@ -18,7 +21,7 @@ def word_embedding(keyword, model):
 
 
 def kor_chk(word):
-    hangul = re.compile('[^ ㄱ-ㅣ가-힣]+').sub('',word)
+    hangul = re.compile('[^ ㄱ-ㅣ가-힣]+').sub('', word)
     return len(hangul)
 
 
@@ -29,7 +32,7 @@ def wordem_chk(keyword, chkword, wordset):
     if '분류:' in chkword:
         return wordset
 
-    if kor_chk(chkword) :
+    if kor_chk(chkword):
         wordset.append(chkword)
         return wordset
 
@@ -45,7 +48,8 @@ def title_noun(title):
     title_set = okt.nouns(title)
 
     return title_set
-    
+
+
 def script_noun(json_file):
     script = script_list2str(json_file)
     okt = Okt()
@@ -53,24 +57,26 @@ def script_noun(json_file):
 
     return NounResult
 
+
 def script_list2str(json_file):
     scriptfile = json2list(json_file)
     script_text = ''.join(scriptfile)
     return script_text
 
+
 def word_set(noun_set):
-    word_list=list()
+    word_list = list()
     for word in noun_set:
         if word not in word_list:
             word_list.append(word)
     return word_list
 
+
 def split_sentence(json_file):
     script = json2list(json_file)
-    sentence_text= ''
+    sentence_text = ''
     for line in script:
         for sent in kss.split_sentences(line):
             sent = sent + ' '
             sentence_text += sent
     return sentence_text
-

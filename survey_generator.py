@@ -7,8 +7,8 @@ from urllib.parse import urlparse
 from youtube_transcript_api import YouTubeTranscriptApi
 
 from QA import load_qa_model, QA_system
-from Summarization import load_sc_model, summary_script
-from wordembedding import *
+from Summarization import summary_script, load_summ_model
+from wordembedding import load_sc_model, load_wm_model, cosin_similar
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
