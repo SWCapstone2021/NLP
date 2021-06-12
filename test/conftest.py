@@ -1,9 +1,13 @@
 import json
+import os
+import sys
 import urllib
 from urllib.parse import urlparse
 
 import pytest
 from youtube_transcript_api import YouTubeTranscriptApi
+
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 
 class Example:
