@@ -34,3 +34,15 @@ jobs:
     - name: Test with pytest
       run: |
         pytest -W ignore::DeprecationWarning --cov=basefunction --cov=QA --cov=Summarization --cov=wordembedding --cov-report=html:asset/coverage --html=asset/test/report.html
+
+    - name: Archive test results 😉
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-report
+        path: asset/test/report.html
+
+    - name: Archive code coverage results 😛
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage-report
+        path: asset/coverage/
