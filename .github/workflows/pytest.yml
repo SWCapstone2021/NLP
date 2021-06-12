@@ -1,0 +1,50 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python package
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pytest pytest-cov pytest-html
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: Test with pytest
+      run: |
+        pytest -W ignore::DeprecationWarning --cov=basefunction --cov=QA --cov=Summarization --cov=wordembedding --cov-report=html:asset/coverage --html=asset/test/report.html
+        
+    - name: Archive test results 😉
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-report
+        path: asset/test/test-report.html
+
+    - name: Archive code coverage results 😛
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage-report
+        path: asset/coverage/       
+
+        
