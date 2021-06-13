@@ -12,6 +12,13 @@ jobs:
     environment: main
     steps:
     - uses: actions/checkout@v1
+    - name: echos
+      run: |
+        echo REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        echo REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        echo REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+        echo TARGET: ${{ secrets.REMOTE_TARGET }}
+      
     - name: Deploy to Server
       uses: easingthemes/ssh-deploy@main
       env:
