@@ -1,11 +1,4 @@
-# FindU NLP
-
-이 프로젝트는 2021 Ajou University Spring SW capstone design 과목의 일환으로 진행되었습니다.
-
-
-[![pytest](https://github.com/SWCapstone2021/NLP/actions/workflows/pytest.yml/badge.svg)](https://github.com/SWCapstone2021/NLP/actions/workflows/pytest.yml)
-
-## FindU Read Me
+## FindU NLP Read Me
 
 <p align="center">
     <img src="pics/logo-com.svg"/>
