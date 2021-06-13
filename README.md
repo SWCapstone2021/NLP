@@ -1,7 +1,7 @@
-## FindU NLP Read Me
+## FindU NLP
 
 <p align="center">
-    <img src="pics/logo-com.svg"/>
+    <img src="asset/logo-com.svg"/>
 </p>
 <h4 align="center">스크립트 기반 영상 검색 및 요약 서비스</h4>
 <p align="center">
