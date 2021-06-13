@@ -1,7 +1,7 @@
 ## FindU NLP
 
 <p align="center">
-    <img src="asset/logo-com.svg"/>
+    <img src="asset/logo-com.svg" alt="logo" width="250" height="250"/>
 </p>
 <h4 align="center">스크립트 기반 영상 검색 및 요약 서비스</h4>
 <p align="center">
@@ -39,6 +39,7 @@
     이 프로젝트는 팀 APC에 의해 개발되었습니다.<br/>
     해당 repository는 찾아봐유의 <b>NLP</b> 소스코드를 저장하고 있습니다.    
 </p>
+
 
 ## Features
 
