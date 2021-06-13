@@ -12,7 +12,7 @@ jobs:
     environment: main
     steps:
     - uses: actions/checkout@v1      
-    - name: Deploy to Server
+    - name: Deploy to Server1
       uses: easingthemes/ssh-deploy@v2.2.11
       env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
