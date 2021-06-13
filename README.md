@@ -48,7 +48,7 @@
 
 `FindU-NLP` is based on `torch=1.8.1(cuda 11.1)` and `python 3.8`
 
-자세한 dependency는 [requirements.txt]('requirements.txt')를 참고하시기 바랍니다.
+자세한 dependency는 [requirements](requirements.txt)를 참고하시기 바랍니다.
 
 ## Features
 
