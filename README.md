@@ -4,7 +4,7 @@
 
 해당 repository는 찾아봐유의 **NLP** 소스코드를 저장하고 있습니다.
 
-[![TEST](https://github.com/SWCapstone2021/NLP/actions/workflows/pytest.yml/badge.svg)](https://github.com/SWCapstone2021/NLP/actions/workflows/pytest.yml)
+[![pytest](https://github.com/SWCapstone2021/NLP/actions/workflows/pytest.yml/badge.svg)](https://github.com/SWCapstone2021/NLP/actions/workflows/pytest.yml)
 
 ## Features
 
