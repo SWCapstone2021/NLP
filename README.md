@@ -165,7 +165,7 @@ Contributor : 강한결, 김수연, 허범수
 
 ## Reference
 
-[PORORO]('https://github.com/kakaobrain/pororo')
+[PORORO](https://github.com/kakaobrain/pororo)
 
-[🤗transformers]('https://github.com/huggingface/transformers')
+[🤗transformers](https://github.com/huggingface/transformers)
 
