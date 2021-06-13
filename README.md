@@ -2,9 +2,53 @@
 
 이 프로젝트는 2021 Ajou University Spring SW capstone design 과목의 일환으로 진행되었습니다.
 
-해당 repository는 찾아봐유의 **NLP** 소스코드를 저장하고 있습니다.
 
 [![pytest](https://github.com/SWCapstone2021/NLP/actions/workflows/pytest.yml/badge.svg)](https://github.com/SWCapstone2021/NLP/actions/workflows/pytest.yml)
+
+## FindU Read Me
+
+<p align="center">
+    <img src="pics/logo-com.svg"/>
+</p>
+<h4 align="center">스크립트 기반 영상 검색 및 요약 서비스</h4>
+<p align="center">
+    <a href="https://github.com/SWCapstone2021/NLP/actions/workflows/deploy.yml">
+        <img src="https://github.com/SWCapstone2021/NLP/actions/workflows/deploy.yml/badge.svg"/>
+    </a> 
+    <a href="https://github.com/SWCapstone2021/NLP/actions/workflows/pytest.yml">
+        <img src="https://github.com/SWCapstone2021/NLP/actions/workflows/pytest.yml/badge.svg?branch=dev"/>
+    </a>	
+    <a href="https://github.com/SWCapstone2021/NLP/issues">
+        <img src="https://img.shields.io/github/issues/SWCapstone2021/NLP"/>
+    </a>
+    <a href="https://github.com/SWCapstone2021/NLP/pulls">
+        <img src="https://img.shields.io/github/forks/SWCapstone2021/NLP"/>
+    </a>
+    <a href="https://github.com/SWCapstone2021/NLP/stargazers">
+        <img src="https://img.shields.io/github/stars/SWCapstone2021/NLP"/>
+    </a>
+    <a href="https://github.com/SWCapstone2021/NLP/blob/main/LICENSE">
+        <img src="https://img.shields.io/github/license/SWCapstone2021/NLP"/>
+    </a> <br/>
+    <img src="https://img.shields.io/badge/Nuxt.js-00C58E?style=flat-square&logo=nuxt.js&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Built with Firebase-FFCA28?style=flat-square&logo=Firebase&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Vue-4FC08D?style=flat-square&logo=Vue-dot-js&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Vuetify-1867C0?style=flat-square&logo=Vuetify&logoColor=white"/>
+</p>
+<p align="center">
+  <a href="#tutorial">Tutorial</a></a> • 
+  <a href="#homepage-feature">Homepage Features</a> •  
+  <a href="#findu-feature">FindU Features</a> •  
+  <a href="#system-structure">System Structures</a> • 
+  <a href="#contributor">Contributors</a> • 
+  <a href="#license">License</a>
+</p>
+<p align="center">
+    이 프로젝트는 2021 Ajou University Spring SW capston design 과목의 일환으로 진행되었습니다. <br/>
+    이 어플리케이션은 상업적인 목적이 포함되어 있지 않습니다. 
+    이 프로젝트는 팀 APC에 의해 개발되었습니다.<br/>
+    해당 repository는 찾아봐유의 <b>NLP</b> 소스코드를 저장하고 있습니다.    
+</p>
 
 ## Features
 
