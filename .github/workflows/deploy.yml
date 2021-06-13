@@ -1,4 +1,4 @@
-name: deploy to server
+name: deploy
 
 on:
   push:
@@ -29,6 +29,7 @@ jobs:
     - name: Test with pytest
       run: |
         pytest -W ignore::DeprecationWarning --cov=basefunction --cov=QA --cov=Summarization --cov=wordembedding --cov-report=html:asset/coverage --html=asset/test/report.html
+    
     - name: Archive test results 😉
       uses: actions/upload-artifact@v2
       with:
@@ -48,7 +49,7 @@ jobs:
     environment: main
     steps:
     - uses: actions/checkout@v1      
-    - name: Deploy to Server1
+    - name: Deploy to server
       uses: easingthemes/ssh-deploy@v2.2.11
       env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
