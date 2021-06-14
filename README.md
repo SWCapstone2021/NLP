@@ -42,6 +42,8 @@
     해당 repository는 찾아봐유의 <b>NLP</b> 소스코드를 저장하고 있습니다.
 <br/>    
     상업적 목적을 띄고 있지 않으며, 팀 APC에 의해 개발되었습니다.
+    <br/>
+    Visit out website [FindU](https://apcfindu.web.app/)
 </p>
 
 ## Dependency
