@@ -38,7 +38,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: test-report
-        path: asset/test/report.html
+        path: asset/test/report/
 
     - name: Archive code coverage results 😛
       uses: actions/upload-artifact@v2
