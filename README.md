@@ -151,9 +151,9 @@ summarized_texts = summary_script(json_file, summ_model)
 
 ## Contributors
 
-Maintainer : 남희수, 오승민
+Maintainer : [남희수](https://github.com/HeesuNam), [오승민](https://github.com/Rhcsky)
 
-Contributor : 강한결, 김수연, 허범수
+Contributor : [강한결](https://github.com/hankyul2), [김수연](https://github.com/amelia9981), [허범수](https://github.com/xxoSoo)
 
 
 
