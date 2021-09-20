@@ -44,6 +44,9 @@
 <br/>    
     상업적 목적을 띄고 있지 않으며, 팀 APC에 의해 개발되었습니다.
 </p>
+<p align="center">
+    <b>2021년 한국디지털콘텐츠학회 대학생 논문경진대회 금상 수상</b>
+</p>
 
 ## Website
 Visit out website [FindU](https://apcfindu.web.app/) 😀
